@@ -21,8 +21,8 @@ export default async function Page() {
   const marginY = 1;
 
   return (
-    <div className="h-[auto] min-h-[2000px] w-[100%] bg-[#92817A]  md:pt-[1rem] md:pl-[2rem]">
-      <ul className="max-xxs:min-h-[2000px] max-xs:min-h-[1200px] xs:min-h-[1000px] sm:min-h-[900px] md:min-h-[700px]  h-auto flex  flex-col justify-around">
+    <div className="h-[auto] min-h-[1000px] w-[100%] bg-[#92817A]  md:pt-[1rem] md:pl-[2rem]">
+      <ul className="min-h-[1000px]   h-auto flex  flex-col justify-around">
         {data.map((review, index) => (
           <Experience
             message={review.comment}

@@ -24,8 +24,6 @@ export function getInitials(fullName) {
 }
 
 export default function Experience({ message, stars, name, massageTitle }) {
-  //mb-[8rem] xxs:mb-[6rem] xs:mb-[3rem] sm:mb-[2rem]
-
   return (
     <li className="min-h-[5rem] h-auto w-[99%]  relative xxs:m-[5px]  ">
       <div className="min-h-[5rem] h-auto w-[100%] bg-[#FFFBFF] flex justify-start items-center pl-[2px] rounded-4xl">
