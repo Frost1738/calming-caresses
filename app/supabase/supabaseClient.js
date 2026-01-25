@@ -7,3 +7,5 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const createBrowserSupabaseClient = () =>
   createBrowserClient(supabaseUrl, supabaseKey);
+
+export const createClien = () => createClient(supabaseUrl, supabaseKey);

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { createServerClient } from "@supabase/ssr";
 
-export async function middleware(request) {
+export async function proxy(request) {
   const { pathname, origin } = request.nextUrl;
 
   console.log(`🔍 Middleware triggered for: ${pathname}`);

@@ -4,7 +4,6 @@ import { getReviews } from "@/app/ApiServices/getFunctions";
 
 export default async function Page() {
   const data = await getReviews();
-  console.log(data);
 
   function calculateMargin(text, basePadding) {
     if (!text || typeof text !== "string") return basePadding;
@@ -33,7 +32,7 @@ export default async function Page() {
             key={index}
             className={`h-[7rem] w-auto mt-[1rem] sm:mb-[1px] mb-[${calculateMargin(
               review.comment,
-              marginY
+              marginY,
             )}rem]`}
           >
             <Experience
