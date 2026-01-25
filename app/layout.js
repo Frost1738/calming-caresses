@@ -65,6 +65,12 @@ export default async function RootLayout({ children }) {
       lang="en"
       className={`${montserratRegular.variable} ${jostRegular.variable} ${badScript.variable} ${kanitLight.variable} ${pacifico.variable} ${caveat.variable}`}
     >
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        />
+      </head>
       <body className={montserratRegular.className}>
         {children}{" "}
         <Toaster
