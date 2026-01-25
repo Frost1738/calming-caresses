@@ -35,31 +35,31 @@ export default function Sidebar({ children }) {
         <Link href="/dashboard">
           <div className="h-[2rem] mb-[1rem]  flex   items-center">
             <MdOutlineDashboardCustomize className="mr-[1rem]" />{" "}
-            <h2 className="text-sm">dashboard</h2>
+            <h2 className="text-sm text-black">dashboard</h2>
           </div>
         </Link>
         <Link href="/therapy">
           <div className="h-[2rem] mb-[1rem] flex  max-sm:w-[90%] items-center">
             <TbPhysotherapist className="mr-[1rem]" />{" "}
-            <h2 className="text-sm">massage therapy</h2>
+            <h2 className="text-sm text-black">massage therapy</h2>
           </div>
         </Link>
         <Link href="/therapist">
           <div className="h-[2rem] mb-[1rem] flex  items-center">
             <IoPersonSharp className="mr-[1rem]" />{" "}
-            <h2 className="text-sm">therapist</h2>
+            <h2 className="text-sm text-black">therapist</h2>
           </div>
         </Link>
         <Link href="/booking">
           <div className="h-[2rem] mb-[1rem] flex  items-center">
             <FaCalendarAlt className="mr-[1rem]" />{" "}
-            <h2 className="text-sm">booking</h2>
+            <h2 className="text-sm text-black">booking</h2>
           </div>
         </Link>
         <Link href="/authority">
           <div className="h-[2rem] mb-[1rem] flex  items-center">
             <TbBadgesFilled className="mr-[1rem] " />{" "}
-            <h2 className="text-sm">rank up</h2>
+            <h2 className="text-sm text-black">rank up</h2>
           </div>
         </Link>
       </div>
