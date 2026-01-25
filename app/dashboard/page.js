@@ -49,61 +49,7 @@ export default async function Page() {
   const shouldUseSlider = appointments && appointments.length > 3;
 
   return (
-    <div
-      className="min-h-[100vh] h-auto bg-amber-400 overflow-x-hidden"
-      style={{
-        // LOCKs THE FUCKING VIEWPORT
-        width: "100vw",
-        maxWidth: "100vw",
-
-        // Prevent ALL browser interventions
-        touchAction: "none",
-        // Force scale
-        transform: "scale(1)",
-        transformOrigin: "top left",
-        // Kill zoom
-        zoom: 1,
-      }}
-    >
-      {/*FIGHTs the browser zoom*/}
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-        // FIGHT MODE: Prevent ALL zooming
-        (function() {
-          
-          
-          // 1. Lock visual viewport
-          if (window.visualViewport) {
-            window.visualViewport.scale = 1;
-            window.visualViewport.addEventListener('resize', () => {
-              window.visualViewport.scale = 1;
-            });
-          }
-          
-          // 2. Force meta viewport
-          document.querySelector('meta[name="viewport"]').content = 
-            'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover';
-          
-          // 3. Constantly reset any zoom attempts
-          setInterval(() => {
-            document.documentElement.style.zoom = '1';
-            document.body.style.transform = 'scale(1)';
-          }, 100);
-          
-          // 4. Kill pinch zoom
-          document.addEventListener('touchstart', (e) => {
-            if (e.touches.length > 1) e.preventDefault();
-          }, { passive: false });
-          
-          // 5. Kill Ctrl+scroll zoom
-          document.addEventListener('wheel', (e) => {
-            if (e.ctrlKey) e.preventDefault();
-          }, { passive: false });
-        })();
-      `,
-        }}
-      />
+    <div className="min-h-[100vh] h-auto bg-amber-400 overflow-x-hidden">
       <div className="w-[100%] h-[5rem] xl:h-[7rem] bg-left  max-xl:bg-cover flex justify-center items-center  bg-[url(https://edgmylxnlegbdhhbpcvm.supabase.co/storage/v1/object/sign/background--mini--003/FgTO3a6QvenARnKKYjWD--0--5dfww.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zMDRhZjUwMi04NTkxLTQwNWYtOWQ3OC0yYWM0NWY1ZDllNDEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS1taW5pLS0wMDMvRmdUTzNhNlF2ZW5BUm5LS1lqV0QtLTAtLTVkZnd3LmpwZyIsImlhdCI6MTc2NTI2ODMzMSwiZXhwIjoxNzk2ODA0MzMxfQ.hF7V5fydiAis-Q3ORWKXmeXie0X9FAzM2gDD1VMmxOY)]">
         <h2 className="text-blue-300 xs:text-xl text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
           Good {timeGreeting}
