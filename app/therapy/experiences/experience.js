@@ -53,11 +53,7 @@ export default function Experience({ message, stars, name, massageTitle }) {
           </h3>
           <span className="flex ">
             {Array.from({ length: stars }, (_, index) => (
-              <GiNorthStarShuriken
-                color="#00000"
-                className="text-black"
-                key={index}
-              />
+              <GiNorthStarShuriken className="text-black" key={index} />
             ))}
           </span>
           <p className="text-black">{message}</p>
