@@ -30,7 +30,6 @@ export default async function Page() {
   const email = sessionData?.session?.user?.user_metadata?.email;
   const session = await getServerSession(authOptions);
 
-
   const userName = display_name || session.user?.name;
   const usersEmail = email || session.user?.email;
 
@@ -56,7 +55,7 @@ export default async function Page() {
         // LOCKs THE FUCKING VIEWPORT
         width: "100vw",
         maxWidth: "100vw",
-        overflow: "hidden",
+
         // Prevent ALL browser interventions
         touchAction: "none",
         // Force scale
