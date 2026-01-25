@@ -40,21 +40,27 @@ const marginY = 1;
 
 export default function Experience({ message, stars, name, massageTitle }) {
   return (
-    <li className={`min-h-[5rem]  mb-3 h-auto w-[99%]  relative xxs:m-[5px]`}>
+    <li className={`min-h-[5rem]  mb-4 h-auto w-[99%]  relative xxs:m-[5px]`}>
       <div className="min-h-[5rem] h-auto w-[100%] bg-[#FFFBFF] flex justify-start items-center pl-[2px] rounded-4xl">
         <div className="h-[4rem] w-[4rem]   bg-[#362417] text-amber-100  rounded-4xl flex justify-center items-center ">
           {getInitials(name)}
         </div>
         <span className="w-[90%] xxs:w-[75%] max-xxs:w-[70%] ml-[10px] ">
-          <h3 className={` font-[family-name:var(--font-jost)] font-semibold `}>
+          <h3
+            className={` font-[family-name:var(--font-jost)] text-black font-semibold `}
+          >
             {name}&apos;s view on the {massageTitle} is
           </h3>
           <span className="flex ">
             {Array.from({ length: stars }, (_, index) => (
-              <GiNorthStarShuriken color="#00000" key={index} />
+              <GiNorthStarShuriken
+                color="#00000"
+                className="text-black"
+                key={index}
+              />
             ))}
           </span>
-          <p>{message}</p>
+          <p className="text-black">{message}</p>
         </span>
       </div>
     </li>

@@ -34,31 +34,31 @@ export default function Sidebar({ children }) {
       <div className="h-[60%] w-[100%] ml-[20px]">
         <Link href="/dashboard">
           <div className="h-[2rem] mb-[1rem]  flex   items-center">
-            <MdOutlineDashboardCustomize className="mr-[1rem]" />{" "}
+            <MdOutlineDashboardCustomize className="mr-[1rem] text-black" />{" "}
             <h2 className="text-sm text-black">dashboard</h2>
           </div>
         </Link>
         <Link href="/therapy">
           <div className="h-[2rem] mb-[1rem] flex  max-sm:w-[90%] items-center">
-            <TbPhysotherapist className="mr-[1rem]" />{" "}
+            <TbPhysotherapist className="mr-[1rem] text-black" />{" "}
             <h2 className="text-sm text-black">massage therapy</h2>
           </div>
         </Link>
         <Link href="/therapist">
           <div className="h-[2rem] mb-[1rem] flex  items-center">
-            <IoPersonSharp className="mr-[1rem]" />{" "}
+            <IoPersonSharp className="mr-[1rem] text-black" />{" "}
             <h2 className="text-sm text-black">therapist</h2>
           </div>
         </Link>
         <Link href="/booking">
           <div className="h-[2rem] mb-[1rem] flex  items-center">
-            <FaCalendarAlt className="mr-[1rem]" />{" "}
+            <FaCalendarAlt className="mr-[1rem] text-black" />{" "}
             <h2 className="text-sm text-black">booking</h2>
           </div>
         </Link>
         <Link href="/authority">
           <div className="h-[2rem] mb-[1rem] flex  items-center">
-            <TbBadgesFilled className="mr-[1rem] " />{" "}
+            <TbBadgesFilled className="mr-[1rem] text-black" />{" "}
             <h2 className="text-sm text-black">rank up</h2>
           </div>
         </Link>
