@@ -27,7 +27,7 @@ export default function Experience({ message, stars, name, massageTitle }) {
   //mb-[8rem] xxs:mb-[6rem] xs:mb-[3rem] sm:mb-[2rem]
 
   return (
-    <div className="min-h-[5rem] h-auto w-[99%]  relative xxs:m-[5px]  ">
+    <li className="min-h-[5rem] h-auto w-[99%]  relative xxs:m-[5px]  ">
       <div className="min-h-[5rem] h-auto w-[100%] bg-[#FFFBFF] flex justify-start items-center pl-[2px] rounded-4xl">
         <div className="h-[4rem] w-[4rem]   bg-[#362417] text-amber-100  rounded-4xl flex justify-center items-center ">
           {getInitials(name)}
@@ -44,6 +44,6 @@ export default function Experience({ message, stars, name, massageTitle }) {
           <p>{message}</p>
         </span>
       </div>
-    </div>
+    </li>
   );
 }
