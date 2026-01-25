@@ -34,7 +34,7 @@ export default async function Layout({ children }) {
     "User";
 
   return (
-    <div className="min-h-screen h-auto relative flex bg-amber-950 overflow-x-hidden">
+    <div className=" h-auto relative flex bg-amber-950 overflow-x-hidden">
       <MenuProvider>
         <Sidebar>
           <Image
