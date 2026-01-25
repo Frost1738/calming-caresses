@@ -49,7 +49,7 @@ export default async function Page() {
   const shouldUseSlider = appointments && appointments.length > 3;
 
   return (
-    <div className="min-h-[100vh] h-auto bg-amber-400 overflow-x-hidden overflow-y-scroll">
+    <div className="min-h-[100vh] h-auto bg-amber-400  overflow-y-auto">
       <div className="w-[100%] h-[5rem] xl:h-[7rem] bg-left  max-xl:bg-cover flex justify-center items-center  bg-[url(https://edgmylxnlegbdhhbpcvm.supabase.co/storage/v1/object/sign/background--mini--003/FgTO3a6QvenARnKKYjWD--0--5dfww.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zMDRhZjUwMi04NTkxLTQwNWYtOWQ3OC0yYWM0NWY1ZDllNDEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS1taW5pLS0wMDMvRmdUTzNhNlF2ZW5BUm5LS1lqV0QtLTAtLTVkZnd3LmpwZyIsImlhdCI6MTc2NTI2ODMzMSwiZXhwIjoxNzk2ODA0MzMxfQ.hF7V5fydiAis-Q3ORWKXmeXie0X9FAzM2gDD1VMmxOY)]">
         <h2 className="text-blue-300 xs:text-xl text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
           Good {timeGreeting}
