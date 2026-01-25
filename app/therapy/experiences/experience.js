@@ -23,9 +23,24 @@ export function getInitials(fullName) {
   return initialsArray.join("");
 }
 
+function calculateMargin(text, basePadding) {
+  if (!text || typeof text !== "string") return basePadding;
+  const words = text
+    .trim()
+    .split(/\s+/)
+    .filter((word) => word.length > 0);
+  const wordCount = words.length;
+
+  const multiplier = wordCount > 7 ? 3 : 1;
+
+  return basePadding * multiplier;
+}
+
+const marginY = 1;
+
 export default function Experience({ message, stars, name, massageTitle }) {
   return (
-    <li className="min-h-[5rem] h-auto w-[99%]  relative xxs:m-[5px]  ">
+    <li className={`min-h-[5rem]  mb-3 h-auto w-[99%]  relative xxs:m-[5px]`}>
       <div className="min-h-[5rem] h-auto w-[100%] bg-[#FFFBFF] flex justify-start items-center pl-[2px] rounded-4xl">
         <div className="h-[4rem] w-[4rem]   bg-[#362417] text-amber-100  rounded-4xl flex justify-center items-center ">
           {getInitials(name)}

@@ -5,21 +5,6 @@ import { getReviews } from "@/app/ApiServices/getFunctions";
 export default async function Page() {
   const data = await getReviews();
 
-  function calculateMargin(text, basePadding) {
-    if (!text || typeof text !== "string") return basePadding;
-    const words = text
-      .trim()
-      .split(/\s+/)
-      .filter((word) => word.length > 0);
-    const wordCount = words.length;
-
-    const multiplier = wordCount > 7 ? 3 : 1;
-
-    return basePadding * multiplier;
-  }
-
-  const marginY = 1;
-
   return (
     <div className="h-[auto] min-h-[1000px] w-[100%] bg-[#92817A]  md:pt-[1rem] md:pl-[2rem]">
       <ul className="min-h-[1000px]   h-auto flex  flex-col justify-around">
