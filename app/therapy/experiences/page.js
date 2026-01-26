@@ -1,7 +1,7 @@
 import React from "react";
 import Experience from "./experience";
 import { getReviews } from "@/app/ApiServices/getFunctions";
-import { createSupabaseServerClient } from "../supabase/server";
+import { createSupabaseServerClient } from "@/app/supabase/server";
 
 export default async function Page() {
   const data = await getReviews();
