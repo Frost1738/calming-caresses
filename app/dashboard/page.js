@@ -34,10 +34,10 @@ export default async function Page() {
   const usersEmail = email || session.user?.email;
 
   const timeGreeting = getTimeOfDay();
-  const postSessionTips = await getPostSessionTip(email);
+  const postSessionTips = await getPostSessionTip(usersEmail);
   const OnlyTips = postSessionTips[0];
 
-  const rawAppointments = await getAppointments(email);
+  const rawAppointments = await getAppointments(usersEmail);
 
   const pastAppointments = datesPastToday(rawAppointments);
 
