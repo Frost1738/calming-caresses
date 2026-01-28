@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import AppointmentCard from "./appointmentCard";
 import toast from "react-hot-toast";
@@ -65,23 +64,26 @@ export default function AppointmentsSlider({ appointments, userName }) {
   const hasPrev = currentIndex > 0;
 
   return (
-    <div className="h-auto min-h-[100vh] w-[100%]  bg-[radial-gradient(ellipse_at_center,_rgba(255,203,71,1)_0%,_rgba(168,126,29,1)_35%,_rgba(39,41,50,1)_100%)] flex justify-center items-center flex-col md:h-[80vh] ">
+    <div className="h-auto min-h-[100vh] w-[100%] bg-[radial-gradient(ellipse_at_center,_rgba(255,203,71,1)_0%,_rgba(168,126,29,1)_35%,_rgba(39,41,50,1)_100%)] flex justify-center items-center flex-col md:h-[80vh] overflow-hidden">
+      {" "}
+      {/* Added overflow-hidden */}
       {/* Heading */}
-      <div className="w-full text-center ">
+      <div className="w-full text-center">
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white"></h1>
-        <p className="text-white/80 text-lg md:text-xl xl:mt-8  md:pb-2 max-md:mb-6.5 md:mt-7.5 ">
-          <span className="font-semibold text-[#ABA194] font-[family-name:var(--font-quicksand))]  ">
+        <p className="text-white/80 text-lg md:text-xl xl:mt-8 md:pb-2 max-md:mb-6.5 md:mt-7.5">
+          <span className="font-semibold text-[#ABA194] font-[family-name:var(--font-quicksand))]">
             YOU ARE SCHEDULED FOR 🗓️
           </span>
         </p>
       </div>
-
-      <div className="relative w-full max-w-[100%] h-full flex items-center justify-center max-sm:mt-2 sm:mt-1.5 md:mt-1 ">
+      <div className="relative w-full max-w-[100vw] h-full flex items-center justify-center max-sm:mt-2 sm:mt-1.5 md:mt-1 px-4">
+        {" "}
+        {/* Added px-4 and max-w-[100vw] */}
         {/* Left Arrow - Positioned at 20% */}
         {hasPrev && (
           <button
             onClick={prevSlide}
-            className="absolute left-[5%] top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 w-12 h-12 md:w-14 md:h-14 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/20 shadow-xl"
+            className="absolute left-[10%] top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 w-12 h-12 md:w-14 md:h-14 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/20 shadow-xl"
             aria-label="Previous appointments"
           >
             <svg
@@ -97,15 +99,18 @@ export default function AppointmentsSlider({ appointments, userName }) {
             </svg>
           </button>
         )}
-
-        <div className="w-full px-1">
+        <div className="w-full max-w-[calc(100vw-2rem)] mx-auto">
+          {" "}
+          {/* Container with max-width calculation */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-[1rem] w-full">
             {currentSlides.map((appointment, index) => (
               <div
                 key={appointment.id || index}
-                className="flex justify-center w-[100%]"
+                className="flex justify-center w-full"
               >
-                <div className="w-full max-w-xs md:max-w-[100%] flex justify-center items-center">
+                <div className="w-full min-w-0 flex justify-center items-center">
+                  {" "}
+                  {/* Changed to min-w-0 */}
                   <AppointmentCard
                     date={appointment.date}
                     time={appointment.time}
@@ -118,12 +123,11 @@ export default function AppointmentsSlider({ appointments, userName }) {
             ))}
           </div>
         </div>
-
         {/* Right Arrow - Positioned at 80% */}
         {hasNext && (
           <button
             onClick={nextSlide}
-            className="absolute right-[5%] top-1/2 -translate-y-1/2 translate-x-1/2 z-10 w-12 h-12 md:w-14 md:h-14 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/20 shadow-xl"
+            className="absolute right-[10%] top-1/2 -translate-y-1/2 translate-x-1/2 z-10 w-12 h-12 md:w-14 md:h-14 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/20 shadow-xl"
             aria-label="Next appointments"
           >
             <svg
@@ -140,10 +144,13 @@ export default function AppointmentsSlider({ appointments, userName }) {
           </button>
         )}
       </div>
-
       {/* Pagination and Info */}
-      <div className="mt-8 md:mt-10 md:mb-10 text-center">
-        <div className="inline-flex items-center space-x-4 bg-black/20 backdrop-blur-sm rounded-full px-6 py-2 mb-4">
+      <div className="mt-8 md:mt-10 md:mb-10 text-center w-full max-w-[calc(100vw-2rem)] mx-auto">
+        {" "}
+        {/* Added max-width and mx-auto */}
+        <div className="inline-flex items-center space-x-4 bg-black/20 backdrop-blur-sm rounded-full px-6 py-2 mb-4 whitespace-nowrap overflow-x-auto scrollbar-hide max-w-full">
+          {" "}
+          {/* Added overflow control */}
           <span className="text-white font-medium">
             Page <span className="text-amber-100">{currentIndex + 1}</span> of{" "}
             {totalSlides}
@@ -158,15 +165,16 @@ export default function AppointmentsSlider({ appointments, userName }) {
             of {appointments.length} appointments
           </span>
         </div>
-
         {/* Pagination Dots */}
         {totalSlides > 1 && (
-          <div className="flex justify-center space-x-3">
+          <div className="flex justify-center space-x-3 overflow-x-auto pb-2 scrollbar-hide max-w-full">
+            {" "}
+            {/* Added overflow control */}
             {Array.from({ length: totalSlides }).map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
-                className={`w-8 h-2 rounded-full transition-all duration-300 ${
+                className={`w-8 h-2 rounded-full transition-all duration-300 flex-shrink-0 ${
                   idx === currentIndex
                     ? "bg-white scale-110"
                     : "bg-white/40 hover:bg-white/60"
