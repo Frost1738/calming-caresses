@@ -59,7 +59,7 @@ export default async function Page() {
       {shouldUseSlider ? (
         <AppointmentsSlider appointments={appointments} userName={userName} />
       ) : (
-        <div className="h-auto relative max-xxs:pt-15 xxs:pt-16 max-xxs:pb-8 xxs:pt-8 xxs:pb-15 xl:pt-30 xs:pt-16 sm:pt-14 lg:pt-25  bg-[radial-gradient(ellipse_at_center,_rgba(255,203,71,1)_0%,_rgba(168,126,29,1)_35%,_rgba(39,41,50,1)_100%)] flex justify-center items-center flex-col md:flex-row md:min-h-[80vh]">
+        <div className="h-auto relative max-xxs:pt-15 xxs:pt-16 max-xxs:pb-8 xxs:pt-8 xxs:pb-15 xl:pt-30 xs:pt-16 sm:pt-14 lg:pt-25  bg-[radial-gradient(ellipse_at_center,_rgba(255,203,71,1)_0%,_rgba(168,126,29,1)_35%,_rgba(39,41,50,1)_100%)] flex justify-center items-center  md:min-h-[80vh]">
           {appointments.length > 0 ? (
             <span className="font-semibold absolute text-[#ABA194] top-1 xxs:top-4 xs:top-5 sm:top-4 xl:top-10 lg:top-7 max-xxs:top-5 font-[family-name:var(--font-quicksand))]">
               YOU ARE SCHEDULED FOR 🗓️
