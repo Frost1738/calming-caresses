@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
-
 import { deleteTherapist } from "@/app/ApiServices/serverActions";
 import toast from "react-hot-toast";
-
 import StatsCards from "./statsCard";
 import SearchAndFilters from "./searchAndFilters";
 import TherapistCard from "./therapistCard";
@@ -15,7 +13,11 @@ import { getLevelColor, getLevelLabel } from "@/app/helpers/helper";
 import { Header } from "./header";
 
 export default function DemotionPage({ therapist: initialTherapists }) {
-  const [therapists, setTherapists] = useState(initialTherapists || []);
+  // FIX 1: Ensure therapists is always an array
+  const [therapists, setTherapists] = useState(
+    Array.isArray(initialTherapists) ? initialTherapists : [],
+  );
+
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
     level: "all",
@@ -24,20 +26,39 @@ export default function DemotionPage({ therapist: initialTherapists }) {
   const [therapistToRemove, setTherapistToRemove] = useState(null);
   const [isRemoving, setIsRemoving] = useState(false);
 
-  // Filter therapists by name
-  const filteredTherapists = therapists.filter((therapist) => {
-    const matchesSearch = therapist.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesLevel =
-      filters.level === "all" || therapist.level === filters.level;
-    const matchesVerified =
-      filters.verified === "all" ||
-      (filters.verified === "verified" && therapist.verified) ||
-      (filters.verified === "unverified" && !therapist.verified);
+  // FIX 2: Add useEffect to handle prop changes
+  useEffect(() => {
+    if (Array.isArray(initialTherapists)) {
+      setTherapists(initialTherapists);
+    } else {
+      console.warn("initialTherapists is not an array:", initialTherapists);
+      setTherapists([]);
+    }
+  }, [initialTherapists]);
 
-    return matchesSearch && matchesLevel && matchesVerified;
-  });
+  // FIX 3: Add defensive check before using .filter()
+  const filteredTherapists = Array.isArray(therapists)
+    ? therapists.filter((therapist) => {
+        // FIX 4: Add null check for therapist
+        if (!therapist || typeof therapist !== "object") return false;
+
+        const therapistName = therapist.name || "";
+        const therapistLevel = therapist.level || "";
+        const therapistVerified = therapist.verified || false;
+
+        const matchesSearch = therapistName
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const matchesLevel =
+          filters.level === "all" || therapistLevel === filters.level;
+        const matchesVerified =
+          filters.verified === "all" ||
+          (filters.verified === "verified" && therapistVerified) ||
+          (filters.verified === "unverified" && !therapistVerified);
+
+        return matchesSearch && matchesLevel && matchesVerified;
+      })
+    : []; // Return empty array if therapists is not an array
 
   const handleDeregister = (id) => {
     setTherapistToRemove(id);
@@ -98,17 +119,24 @@ export default function DemotionPage({ therapist: initialTherapists }) {
     }
   };
 
-  // Calculate stats
+  // Calculate stats with defensive checks
   const stats = {
-    total: therapists.length,
-    verified: therapists.filter((t) => t.verified).length,
-    seasoned: therapists.filter((t) => t.level === "seasoned").length,
-    specialist: therapists.filter((t) => t.level === "specialist").length,
-    novice: therapists.filter((t) => t.level === "novice").length,
+    total: Array.isArray(therapists) ? therapists.length : 0,
+    verified: Array.isArray(therapists)
+      ? therapists.filter((t) => t?.verified).length
+      : 0,
+    seasoned: Array.isArray(therapists)
+      ? therapists.filter((t) => t?.level === "seasoned").length
+      : 0,
+    specialist: Array.isArray(therapists)
+      ? therapists.filter((t) => t?.level === "specialist").length
+      : 0,
+    novice: Array.isArray(therapists)
+      ? therapists.filter((t) => t?.level === "novice").length
+      : 0,
   };
 
   // Helper functions
-
   const formatEducation = (education) => {
     if (!education) return "Not specified";
     return education.charAt(0).toUpperCase() + education.slice(1);
@@ -172,7 +200,7 @@ export default function DemotionPage({ therapist: initialTherapists }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 sm:gap-6">
           {filteredTherapists.map((therapist) => (
             <TherapistCard
-              key={therapist.id}
+              key={therapist?.id || Math.random()}
               therapist={therapist}
               handleDeregister={handleDeregister}
               getLevelColor={getLevelColor}
