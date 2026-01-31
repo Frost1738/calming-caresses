@@ -1,34 +1,54 @@
 "use client";
 
+import { useState, useEffect, useMemo } from "react";
 import { TbMassage } from "react-icons/tb";
-import { useState, useEffect } from "react";
 
-export default function Loader() {
-  const [pulsePhase, setPulsePhase] = useState(0);
+// Pure deterministic function - can be shared or imported
+function deterministicRandom(seed) {
+  const x = Math.sin(seed * 100) * 10000;
+  return Math.abs(x - Math.floor(x));
+}
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPulsePhase((prev) => (prev + 1) % 4); // 4-phase cycle
-    }, 600); // Faster pulse like Supabase
+export default function AnotherLoader() {
+  const [loading, setLoading] = useState(true);
 
-    return () => clearInterval(interval);
-  }, []);
+  // Memoized bubble positions for this component
+  const bubblePositions = useMemo(
+    () =>
+      Array.from({ length: 6 }, (_, i) => {
+        const random1 = deterministicRandom(i * 3);
+        const random2 = deterministicRandom(i * 3 + 1);
+
+        return {
+          id: i,
+          width: `${20 + i * 8}px`,
+          height: `${20 + i * 8}px`,
+          left: `${random1 * 100}%`,
+          top: `${random2 * 100}%`,
+          animation: `float ${8 + i}s ease-in-out infinite`,
+          animationDelay: `${i * 0.3}s`,
+        };
+      }),
+    [],
+  );
+
+  // Your loader logic...
 
   return (
-    <div className="fixed inset-0 z-50 bg-gradient-to-br from-emerald-50 via-blue-50 to-purple-50 flex flex-col items-center justify-center">
-      {/* Floating background dots (keeping what you like) */}
+    <div className="fixed inset-0 z-50 bg-white">
+      {/* Floating bubbles */}
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(15)].map((_, i) => (
+        {bubblePositions.map((bubble) => (
           <div
-            key={i}
-            className="absolute rounded-full bg-gradient-to-r from-emerald-200/30 to-blue-200/30"
+            key={bubble.id}
+            className="absolute rounded-full bg-gradient-to-r from-blue-200/30 to-purple-200/30"
             style={{
-              width: `${20 + i * 8}px`,
-              height: `${20 + i * 8}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `float ${8 + i}s ease-in-out infinite`,
-              animationDelay: `${i * 0.3}s`,
+              width: bubble.width,
+              height: bubble.height,
+              left: bubble.left,
+              top: bubble.top,
+              animation: bubble.animation,
+              animationDelay: bubble.animationDelay,
             }}
           />
         ))}
@@ -46,10 +66,10 @@ export default function Loader() {
                 pulsePhase === 0
                   ? "border-emerald-400/40 scale-100"
                   : pulsePhase === 1
-                  ? "border-blue-400/60 scale-110"
-                  : pulsePhase === 2
-                  ? "border-purple-400/40 scale-105"
-                  : "border-emerald-300/50 scale-95"
+                    ? "border-blue-400/60 scale-110"
+                    : pulsePhase === 2
+                      ? "border-purple-400/40 scale-105"
+                      : "border-emerald-300/50 scale-95"
               }`}
               style={{
                 animation: "none", // We control via React state
@@ -62,10 +82,10 @@ export default function Loader() {
                 pulsePhase === 0
                   ? "border-blue-300/30 scale-95"
                   : pulsePhase === 1
-                  ? "border-purple-300/50 scale-105"
-                  : pulsePhase === 2
-                  ? "border-emerald-300/40 scale-100"
-                  : "border-blue-300/40 scale-98"
+                    ? "border-purple-300/50 scale-105"
+                    : pulsePhase === 2
+                      ? "border-emerald-300/40 scale-100"
+                      : "border-blue-300/40 scale-98"
               }`}
             />
 
@@ -75,10 +95,10 @@ export default function Loader() {
                 pulsePhase === 0
                   ? "text-emerald-600 scale-100 opacity-90"
                   : pulsePhase === 1
-                  ? "text-blue-600 scale-110 opacity-100"
-                  : pulsePhase === 2
-                  ? "text-purple-600 scale-105 opacity-95"
-                  : "text-emerald-500 scale-98 opacity-85"
+                    ? "text-blue-600 scale-110 opacity-100"
+                    : pulsePhase === 2
+                      ? "text-purple-600 scale-105 opacity-95"
+                      : "text-emerald-500 scale-98 opacity-85"
               }`}
             />
 

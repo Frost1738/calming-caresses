@@ -1,5 +1,5 @@
 "use client";
-
+import { useMemo, useId } from "react";
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,20 @@ const FaSignInAlt = dynamic(
   { ssr: false },
 );
 
+function deterministicPosition(seed, index, total) {
+  // Create deterministic "random" value
+  const angle = (seed + index) * 137.5; // Golden angle
+  const x = Math.sin((angle * Math.PI) / 180) * 10000;
+  const randomValue = Math.abs(x - Math.floor(x));
+
+  return {
+    id: index,
+    top: `${15 + (index % 10) * 8}%`, // Creates pattern
+    left: `${randomValue * 80 + 10}%`,
+    animationDelay: `${(index % 5) * 0.3}s`,
+  };
+}
+
 export default function LiquidButton({ children }) {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
@@ -16,6 +30,20 @@ export default function LiquidButton({ children }) {
   function handleClick() {
     router.push("./authentication?mode={registration}");
   }
+
+  const componentId = useId(); // React 18+ hook for unique ID
+  const seed = useMemo(() => {
+    // Create seed from component ID
+    return componentId
+      .split("-")
+      .reduce((acc, val) => acc + parseInt(val || "0", 36), 0);
+  }, [componentId]);
+
+  const particlePositions = useMemo(() => {
+    return Array.from({ length: 15 }, (_, i) =>
+      deterministicPosition(seed, i, 15),
+    );
+  }, [seed]);
 
   useEffect(() => {
     setMounted(true);
@@ -160,14 +188,14 @@ export default function LiquidButton({ children }) {
         </div>
 
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-          {[...Array(5)].map((_, i) => (
+          {particlePositions.map((particle) => (
             <div
-              key={i}
-              className="absolute w-1 h-1 rounded-full bg-amber-300/40 animate-pulse"
+              key={particle.id}
+              className="absolute w-[3px] h-[3px] bg-white/50 rounded-full animate-pulse"
               style={{
-                top: `${15 + i * 15}%`,
-                left: `${Math.random() * 80 + 10}%`,
-                animationDelay: `${i * 0.3}s`,
+                top: particle.top,
+                left: particle.left,
+                animationDelay: particle.animationDelay,
               }}
             ></div>
           ))}

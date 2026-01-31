@@ -149,8 +149,6 @@ export async function getCompletedBookingsForTips(therapistsName) {
       .eq("therapistname", therapistsName)
       .eq("status", "completed");
 
-    console.log("game bubu", bookings);
-
     if (error) throw error;
 
     return bookings;
@@ -234,8 +232,6 @@ export async function getRole(userId) {
       .from("profiles")
       .select("role")
       .eq("id", userId);
-
-    console.log("i do care", profile);
 
     return profile;
   } catch (error) {

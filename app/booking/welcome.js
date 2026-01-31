@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -16,22 +16,56 @@ const WelcomePage = () => {
   const typingSpeed = 100;
   const pauseBeforeButton = 500;
 
-  // Responsive particle count
+  // Pure deterministic random function
+  const deterministicRandom = useMemo(() => {
+    const seed = 12345;
+    return (index) => {
+      const x = Math.sin(seed + index * 1000) * 10000;
+      return Math.abs(x - Math.floor(x));
+    };
+  }, []);
+
+  // Memoized animation duration
+  const animationDuration = useMemo(
+    () => deterministicRandom(0) * 10 + 10,
+    [deterministicRandom],
+  );
+
+  // Memoized hover animations
+  const hoverAnimations = useMemo(
+    () =>
+      Array.from({ length: 8 }, (_, i) => ({
+        x: `${deterministicRandom(i * 2) * 100}%`,
+        y: `${deterministicRandom(i * 2 + 1) * 100}%`,
+      })),
+    [deterministicRandom],
+  );
+
+  // Responsive particle count - fixed with deterministic values
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
     const particleCount = isMobile ? 20 : 50;
 
-    const newParticles = Array.from({ length: particleCount }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 2 + 1,
-      speedX: (Math.random() - 0.5) * 0.3,
-      speedY: (Math.random() - 0.5) * 0.3,
-      opacity: Math.random() * 0.4 + 0.1,
-    }));
+    const newParticles = Array.from({ length: particleCount }, (_, i) => {
+      const random1 = deterministicRandom(i * 3);
+      const random2 = deterministicRandom(i * 3 + 1);
+      const random3 = deterministicRandom(i * 3 + 2);
+      const random4 = deterministicRandom(i * 3 + 3);
+      const random5 = deterministicRandom(i * 3 + 4);
+
+      return {
+        id: i,
+        x: random1 * 100,
+        y: random2 * 100,
+        size: random3 * 2 + 1,
+        speedX: (random4 - 0.5) * 0.3,
+        speedY: (random5 - 0.5) * 0.3,
+        opacity: random3 * 0.4 + 0.1,
+      };
+    });
+
     setParticles(newParticles);
-  }, []);
+  }, [deterministicRandom]);
 
   // Animate particles
   useEffect(() => {
@@ -74,6 +108,17 @@ const WelcomePage = () => {
     },
   };
 
+  // Memoized button hover particles
+  const buttonHoverParticles = useMemo(
+    () =>
+      Array.from({ length: 4 }, (_, i) => ({
+        id: i,
+        x: deterministicRandom(i * 5) * 100,
+        y: deterministicRandom(i * 5 + 1) * 100,
+      })),
+    [deterministicRandom],
+  );
+
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-slate-950 via-blue-950 to-slate-950 relative overflow-x-hidden">
       {/* Animated gradient background - Made responsive */}
@@ -99,7 +144,7 @@ const WelcomePage = () => {
               y: [0, Math.cos(p.id) * 10, 0],
             }}
             transition={{
-              duration: Math.random() * 10 + 10,
+              duration: animationDuration,
               repeat: Infinity,
               ease: "linear",
             }}
@@ -246,24 +291,19 @@ const WelcomePage = () => {
 
                     {/* Particle effect on hover - desktop only */}
                     <div className="absolute inset-0 overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl hidden sm:block">
-                      {[...Array(4)].map(
-                        (
-                          _,
-                          i, // Reduced count
-                        ) => (
-                          <motion.div
-                            key={i}
-                            className="absolute w-1 h-1 sm:w-1.5 sm:h-1.5 md:w-2 md:h-2 rounded-full bg-white/30"
-                            initial={{ x: "50%", y: "50%", scale: 0 }}
-                            whileHover={{
-                              x: `${Math.random() * 100}%`,
-                              y: `${Math.random() * 100}%`,
-                              scale: [0, 1, 0],
-                            }}
-                            transition={{ duration: 0.8, delay: i * 0.1 }}
-                          />
-                        ),
-                      )}
+                      {buttonHoverParticles.map((anim, i) => (
+                        <motion.div
+                          key={i}
+                          className="absolute w-1 h-1 sm:w-1.5 sm:h-1.5 md:w-2 md:h-2 rounded-full bg-white/30"
+                          initial={{ x: "50%", y: "50%", scale: 0 }}
+                          whileHover={{
+                            x: anim.x,
+                            y: anim.y,
+                            scale: [0, 1, 0],
+                          }}
+                          transition={{ duration: 0.8, delay: i * 0.1 }}
+                        />
+                      ))}
                     </div>
                   </motion.button>
                 </Link>

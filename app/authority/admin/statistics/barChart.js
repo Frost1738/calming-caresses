@@ -1,3 +1,10 @@
+function getDeterministicFallback(data, index) {
+  // Use golden ratio for natural-looking distribution
+  const goldenRatio = 0.61803398875;
+  const position = (index * goldenRatio) % 1;
+  return position * 10 + 5; // Same range: 5-15
+}
+
 const BarChart = ({
   data,
   color = "from-purple-500 via-pink-500 to-rose-500",
@@ -5,7 +12,10 @@ const BarChart = ({
   const max = Math.max(...data.map((d) => d.value));
   const displayData =
     max === 0
-      ? data.map((item) => ({ ...item, value: Math.random() * 10 + 5 }))
+      ? data.map((item, index) => ({
+          ...item,
+          value: getDeterministicFallback(data, index),
+        }))
       : data;
   const displayMax = Math.max(...displayData.map((d) => d.value));
 

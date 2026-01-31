@@ -1,7 +1,7 @@
 "use client";
 
 import { Mail, Clock, Award, Star, UserX, Shield } from "lucide-react";
-
+import Image from "next/image";
 export default function TherapistCard({
   therapist,
   handleDeregister,
@@ -19,10 +19,12 @@ export default function TherapistCard({
             <div className="relative flex-shrink-0">
               <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-[#9D4EDD]/20 to-[#7B2CBF]/20 rounded-xl overflow-hidden border border-[#9D4EDD]/30">
                 {therapist.image ? (
-                  <img
-                    src={therapist.image}
+                  <Image
+                    src={therapist.image || "/default-therapist.jpg"}
                     alt={therapist.name}
-                    className="w-full h-full object-cover"
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-cover rounded-lg"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">

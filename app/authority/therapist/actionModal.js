@@ -38,7 +38,7 @@ export default function ActionModal({
         </h3>
 
         <p className="text-center text-slate-300 text-sm md:text-base mb-3 md:mb-4">
-          Change time for {selectedAppointment.clientname}'s appointment
+          Change time for {selectedAppointment.clientname}&apos;s appointment
         </p>
 
         <div className="mb-3 md:mb-4">
@@ -107,7 +107,7 @@ export default function ActionModal({
         </h3>
 
         <p className="text-center text-slate-300 text-sm md:text-base mb-3 md:mb-4">
-          Cancel {selectedAppointment.clientname}'s appointment on{" "}
+          Cancel {selectedAppointment.clientname}&apos;s appointment on{" "}
           {new Date(selectedAppointment.date).toLocaleDateString()}?
         </p>
 
@@ -163,7 +163,7 @@ export default function ActionModal({
         </h3>
 
         <p className="text-center text-slate-300 text-sm md:text-base mb-3 md:mb-4">
-          Mark {selectedAppointment.clientname}'s session as completed?
+          Mark {selectedAppointment.clientname}&apos;s session as completed?
         </p>
 
         <div className="bg-gradient-to-r from-emerald-900/30 to-green-900/30 border border-emerald-700/30 rounded-lg p-2 md:p-3 mb-3 md:mb-4">
@@ -216,7 +216,7 @@ export default function ActionModal({
         </h3>
 
         <p className="text-center text-slate-300 text-sm md:text-base mb-3 md:mb-4">
-          Mark {selectedAppointment.clientname}'s appointment as no show?
+          Mark {selectedAppointment.clientname}&apos;s appointment as no show?
         </p>
 
         <div className="bg-gradient-to-r from-amber-900/30 to-orange-900/30 border border-amber-700/30 rounded-lg p-2 md:p-3 mb-3 md:mb-4">
@@ -229,7 +229,7 @@ export default function ActionModal({
               <p className="text-xs md:text-sm text-amber-400">
                 • This marks the client as not showing up
                 <br />• This action cannot be undone
-                <br />• May affect client's future booking privileges
+                <br />• May affect client&apos;s future booking privileges
               </p>
             </div>
           </div>

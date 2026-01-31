@@ -31,6 +31,13 @@ import {
   Monitor,
 } from "lucide-react";
 
+// Pure deterministic function for simulated data
+function generateDeterministicValue(seed, hour) {
+  // Create deterministic "random" value based on seed and hour
+  const x = Math.sin(seed * 100 + hour * 1000) * 10000;
+  return Math.abs(x - Math.floor(x)); // Returns 0-1
+}
+
 export default function StatisticsPage({ bookings }) {
   const [timeRange, setTimeRange] = useState("month");
   const [activeTab, setActiveTab] = useState("overview");
@@ -59,6 +66,33 @@ export default function StatisticsPage({ bookings }) {
 
   const bookingData = normalizedBookings || [];
 
+  // Pure peak hours simulation data
+  const simulatedPeakHours = useMemo(() => {
+    const seed = 12345; // Fixed seed for deterministic output
+
+    return Array.from({ length: 12 }, (_, i) => {
+      const hour = i + 8; // 8AM to 7PM
+      const deterministicValue = generateDeterministicValue(seed, hour);
+
+      let simulatedCount;
+      if (hour === 10 || hour === 14 || hour === 17) {
+        // Peak hours: 12-19
+        simulatedCount = Math.floor(deterministicValue * 8) + 12;
+      } else if (hour === 9 || hour === 11 || hour === 15 || hour === 16) {
+        // Medium hours: 7-11
+        simulatedCount = Math.floor(deterministicValue * 5) + 7;
+      } else {
+        // Off-peak hours: 2-5
+        simulatedCount = Math.floor(deterministicValue * 4) + 2;
+      }
+
+      return {
+        hour: `${hour.toString().padStart(2, "0")}:00`,
+        count: simulatedCount,
+      };
+    });
+  }, []);
+
   const stats = useMemo(() => {
     if (!bookingData || bookingData.length === 0) {
       return {
@@ -77,7 +111,7 @@ export default function StatisticsPage({ bookings }) {
         massageDistribution: [],
         roomDistribution: [],
         clientDistribution: [],
-        peakHours: [],
+        peakHours: simulatedPeakHours, // Use simulated data
       };
     }
 
@@ -195,7 +229,7 @@ export default function StatisticsPage({ bookings }) {
       .sort((a, b) => b.count - a.count)
       .slice(0, 5);
 
-    // Peak hours - REAL DATA with better distribution
+    // Peak hours - REAL DATA with fallback to simulated data
     const hourMap = {};
     for (let hour = 8; hour <= 19; hour++) {
       const hourStr = hour.toString().padStart(2, "0");
@@ -211,35 +245,15 @@ export default function StatisticsPage({ bookings }) {
       }
     });
 
-    const hourCounts = Object.entries(hourMap).map(([hour, count]) => {
-      if (bookingData.length > 0 && Object.values(hourMap).some((v) => v > 0)) {
-        return {
+    // Check if we have real hour data
+    const hasRealHourData = Object.values(hourMap).some((v) => v > 0);
+
+    const peakHours = hasRealHourData
+      ? Object.entries(hourMap).map(([hour, count]) => ({
           hour: `${hour}:00`,
           count: count,
-        };
-      } else {
-        const hourNum = parseInt(hour);
-        let simulatedCount = 0;
-
-        if (hourNum === 10 || hourNum === 14 || hourNum === 17) {
-          simulatedCount = Math.floor(Math.random() * 8) + 12;
-        } else if (
-          hourNum === 9 ||
-          hourNum === 11 ||
-          hourNum === 15 ||
-          hourNum === 16
-        ) {
-          simulatedCount = Math.floor(Math.random() * 5) + 7;
-        } else {
-          simulatedCount = Math.floor(Math.random() * 4) + 2;
-        }
-
-        return {
-          hour: `${hour}:00`,
-          count: simulatedCount,
-        };
-      }
-    });
+        }))
+      : simulatedPeakHours; // Use pure simulated data as fallback
 
     return {
       totalBookings,
@@ -257,10 +271,11 @@ export default function StatisticsPage({ bookings }) {
       massageDistribution,
       roomDistribution,
       clientDistribution,
-      peakHours: hourCounts,
+      peakHours,
     };
-  }, [bookingData]);
+  }, [bookingData, simulatedPeakHours]); // Add simulatedPeakHours to dependencies
 
+  // Rest of the component remains the same...
   const getViewModeIcon = () => {
     switch (viewMode) {
       case "mobile":

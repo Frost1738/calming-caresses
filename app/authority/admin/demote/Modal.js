@@ -48,7 +48,7 @@ export default function DeregisterModal({
                   `${therapist?.name?.toLowerCase()?.replace(/\s+/g, ".")}@massageclinic.com`}
               </div>
               <div className="text-xs text-[#B8B8FF]/60 mt-0.5 truncate">
-                Using name-based deletion: "{therapist?.name}"
+                Using name-based deletion: &quot;{therapist?.name}&quot;
               </div>
             </div>
           </div>

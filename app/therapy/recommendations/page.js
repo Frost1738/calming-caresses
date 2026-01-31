@@ -1,4 +1,3 @@
-// app/ai-massage-advice/page.jsx
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
@@ -108,7 +107,16 @@ const QUICK_QUESTIONS = [
 ];
 
 export default function AIMassageAdvisor() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(() => [
+    {
+      id: 1,
+      text: "Hello! I'm your AI Massage Advisor. I can help you find the perfect massage for your specific needs. Tell me about your pain points, stress levels, or any specific issues you're dealing with.",
+      isAI: true,
+      timestamp: new Date(),
+      recommendations: null,
+    },
+  ]);
+
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
@@ -123,18 +131,24 @@ export default function AIMassageAdvisor() {
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
 
-  // Initialize with welcome message
-  useEffect(() => {
-    setMessages([
-      {
-        id: 1,
-        text: "Hello! I'm your AI Massage Advisor. I can help you find the perfect massage for your specific needs. Tell me about your pain points, stress levels, or any specific issues you're dealing with.",
-        isAI: true,
-        timestamp: new Date(),
-        recommendations: null,
-      },
-    ]);
-  }, []);
+  // Alternative approach: If you need async initialization, use this:
+  // useEffect(() => {
+  //   const initializeMessages = async () => {
+  //     // Only set if messages is empty (though with initial state above, this shouldn't happen)
+  //     if (messages.length === 0) {
+  //       setMessages([
+  //         {
+  //           id: 1,
+  //           text: "Hello! I'm your AI Massage Advisor. I can help you find the perfect massage for your specific needs. Tell me about your pain points, stress levels, or any specific issues you're dealing with.",
+  //           isAI: true,
+  //           timestamp: new Date(),
+  //           recommendations: null,
+  //         },
+  //       ]);
+  //     }
+  //   };
+  //   initializeMessages();
+  // }, []); // Empty dependency array since it only runs once
 
   // Simulated AI response function
   const getAIResponse = async (userMessage) => {

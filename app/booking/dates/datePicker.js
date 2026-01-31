@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -13,82 +13,88 @@ import {
 import { CartContext } from "../cartContext";
 import Link from "next/link";
 
-// Helper function
+// Helper function - pure
 function getDaysUntilWeekend() {
   const today = new Date().getDay();
   return today === 0 ? 0 : today === 6 ? 0 : 6 - today;
 }
 
 export default function MassageDatePicker({ id, name }) {
-  //context in use
+  // Context
   const { setTherapistName, setTherapistId, setDate, setTime } =
     useContext(CartContext);
 
-  //states
+  // States
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [availableSlots, setAvailableSlots] = useState({});
   const [loading, setLoading] = useState(false);
-  const [timeOfDay, setTimeOfDay] = useState("morning");
 
   console.log(selectedTime);
   console.log(selectedDate);
 
+  // Set therapist info in context
   useEffect(() => {
     setTherapistName(name);
     setTherapistId(id);
-  }, [name, id]);
+  }, [name, id, setTherapistName, setTherapistId]);
 
+  // Set selected date in context
   useEffect(() => {
     setDate(selectedDate);
   }, [selectedDate, setDate]);
 
+  // Set selected time in context
   useEffect(() => {
     setTime(selectedTime);
   }, [selectedTime, setTime]);
 
-  // Generate therapist's availability (simulated)
+  // Generate therapist's availability - fixed useEffect
   useEffect(() => {
-    setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      const slots = {};
-      const today = new Date();
+    const fetchAvailability = async () => {
+      setLoading(true);
 
-      // Generate next 14 days
-      for (let i = 0; i < 14; i++) {
-        const date = new Date(today);
-        date.setDate(today.getDate() + i);
-        const dateStr = date.toISOString().split("T")[0];
+      // Simulate API call with setTimeout
+      setTimeout(() => {
+        const slots = {};
+        const today = new Date();
 
-        // Different availability patterns
-        if (i === 0) {
-          slots[dateStr] = ["09:00", "11:00", "14:00", "16:00"]; // Today
-        } else if (date.getDay() === 0 || date.getDay() === 6) {
-          slots[dateStr] = ["10:00", "12:00", "14:00", "16:00", "18:00"]; // Weekends
-        } else {
-          slots[dateStr] = [
-            "08:00",
-            "10:00",
-            "12:00",
-            "14:00",
-            "16:00",
-            "18:00",
-          ]; // Weekdays
+        // Generate next 14 days
+        for (let i = 0; i < 14; i++) {
+          const date = new Date(today);
+          date.setDate(today.getDate() + i);
+          const dateStr = date.toISOString().split("T")[0];
+
+          // Different availability patterns
+          if (i === 0) {
+            slots[dateStr] = ["09:00", "11:00", "14:00", "16:00"]; // Today
+          } else if (date.getDay() === 0 || date.getDay() === 6) {
+            slots[dateStr] = ["10:00", "12:00", "14:00", "16:00", "18:00"]; // Weekends
+          } else {
+            slots[dateStr] = [
+              "08:00",
+              "10:00",
+              "12:00",
+              "14:00",
+              "16:00",
+              "18:00",
+            ]; // Weekdays
+          }
         }
-      }
 
-      setAvailableSlots(slots);
-      setLoading(false);
-    }, 300);
-  }, []);
+        setAvailableSlots(slots);
+        setLoading(false);
+      }, 300);
+    };
 
-  // Get days in month
-  const getDaysInMonth = (date) => {
+    fetchAvailability();
+  }, []); // Empty dependency array since this only runs once on mount
+
+  // Pure helper functions - moved outside effects
+  const getDaysInMonth = useCallback((date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
 
@@ -99,49 +105,55 @@ export default function MassageDatePicker({ id, name }) {
     }
 
     return days;
-  };
+  }, []);
 
-  // Navigate months
-  const prevMonth = () => {
+  // Navigate months - pure functions
+  const prevMonth = useCallback(() => {
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1),
     );
-  };
+  }, [currentDate]);
 
-  const nextMonth = () => {
+  const nextMonth = useCallback(() => {
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1),
     );
-  };
+  }, [currentDate]);
 
-  // Check if date is available
-  const isDateAvailable = (date) => {
-    const dateStr = date.toISOString().split("T")[0];
-    return availableSlots[dateStr] && availableSlots[dateStr].length > 0;
-  };
+  // Check if date is available - pure
+  const isDateAvailable = useCallback(
+    (date) => {
+      const dateStr = date.toISOString().split("T")[0];
+      return availableSlots[dateStr] && availableSlots[dateStr].length > 0;
+    },
+    [availableSlots],
+  );
 
-  // Check if date is today
-  const isToday = (date) => {
+  // Check if date is today - pure
+  const isToday = useCallback((date) => {
     const today = new Date();
     return (
       date.getDate() === today.getDate() &&
       date.getMonth() === today.getMonth() &&
       date.getFullYear() === today.getFullYear()
     );
-  };
+  }, []);
 
-  // Check if date is selected
-  const isSelected = (date) => {
-    if (!selectedDate) return false;
-    return (
-      date.getDate() === selectedDate.getDate() &&
-      date.getMonth() === selectedDate.getMonth() &&
-      date.getFullYear() === selectedDate.getFullYear()
-    );
-  };
+  // Check if date is selected - pure
+  const isSelected = useCallback(
+    (date) => {
+      if (!selectedDate) return false;
+      return (
+        date.getDate() === selectedDate.getDate() &&
+        date.getMonth() === selectedDate.getMonth() &&
+        date.getFullYear() === selectedDate.getFullYear()
+      );
+    },
+    [selectedDate],
+  );
 
-  // Get time of day vibe
-  const getTimeVibe = (time) => {
+  // Get time of day vibe - pure
+  const getTimeVibe = useCallback((time) => {
     const hour = parseInt(time.split(":")[0]);
     if (hour < 12)
       return {
@@ -166,8 +178,9 @@ export default function MassageDatePicker({ id, name }) {
       name: "Night Serenity",
       color: "text-purple-500",
     };
-  };
+  }, []);
 
+  // Derived values
   const daysInMonth = getDaysInMonth(currentDate);
   const monthNames = [
     "January",
