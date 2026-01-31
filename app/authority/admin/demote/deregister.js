@@ -12,11 +12,19 @@ import EmptyState from "./emptyState";
 import { getLevelColor, getLevelLabel } from "@/app/helpers/helper";
 import { Header } from "./header";
 
-export default function DemotionPage({ therapist: initialTherapists }) {
-  // FIX 1: Ensure therapists is always an array
-  const [therapists, setTherapists] = useState(
-    Array.isArray(initialTherapists) ? initialTherapists : [],
-  );
+export default function DemotionPage({ therapists: initialTherapists }) {
+  // FIX: Use correct prop name and ensure it's always an array
+  const [therapists, setTherapists] = useState(() => {
+    if (Array.isArray(initialTherapists)) {
+      return initialTherapists;
+    } else if (initialTherapists && typeof initialTherapists === "object") {
+      // Try to extract array from object
+      const values = Object.values(initialTherapists);
+      const arrayValue = values.find((v) => Array.isArray(v));
+      return arrayValue || [];
+    }
+    return [];
+  });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
@@ -26,26 +34,36 @@ export default function DemotionPage({ therapist: initialTherapists }) {
   const [therapistToRemove, setTherapistToRemove] = useState(null);
   const [isRemoving, setIsRemoving] = useState(false);
 
-  // FIX 2: Add useEffect to handle prop changes
+  // Sync with prop changes
   useEffect(() => {
     if (Array.isArray(initialTherapists)) {
       setTherapists(initialTherapists);
+    } else if (initialTherapists && typeof initialTherapists === "object") {
+      const values = Object.values(initialTherapists);
+      const arrayValue = values.find((v) => Array.isArray(v));
+      setTherapists(arrayValue || []);
     } else {
-      console.warn("initialTherapists is not an array:", initialTherapists);
       setTherapists([]);
     }
   }, [initialTherapists]);
 
-  // FIX 3: Add defensive check before using .filter()
+  // Safe filtering with multiple fallbacks
   const filteredTherapists = Array.isArray(therapists)
     ? therapists.filter((therapist) => {
-        // FIX 4: Add null check for therapist
+        // Handle null/undefined therapist
         if (!therapist || typeof therapist !== "object") return false;
 
-        const therapistName = therapist.name || "";
-        const therapistLevel = therapist.level || "";
-        const therapistVerified = therapist.verified || false;
+        // Extract values with multiple fallbacks
+        const therapistName =
+          therapist.name || therapist.fullName || therapist.username || "";
+        const therapistLevel = therapist.level || therapist.rank || "novice";
+        const therapistVerified =
+          therapist.verified ||
+          therapist.isVerified ||
+          therapist.status === "verified" ||
+          false;
 
+        // Apply filters
         const matchesSearch = therapistName
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
@@ -58,7 +76,7 @@ export default function DemotionPage({ therapist: initialTherapists }) {
 
         return matchesSearch && matchesLevel && matchesVerified;
       })
-    : []; // Return empty array if therapists is not an array
+    : [];
 
   const handleDeregister = (id) => {
     setTherapistToRemove(id);
@@ -70,18 +88,25 @@ export default function DemotionPage({ therapist: initialTherapists }) {
     setIsRemoving(true);
 
     try {
-      // Find the therapist by ID to get their name
+      // Find the therapist by ID
       const therapist = therapists.find((t) => t.id === therapistToRemove);
       if (!therapist) {
         toast.error("Therapist not found");
         return;
       }
 
-      // Show loading toast
-      const loadingToast = toast.loading(`De-registering ${therapist.name}...`);
+      // Get the name to delete
+      const therapistName = therapist.name || therapist.fullName;
+      if (!therapistName) {
+        toast.error("Therapist name not found");
+        return;
+      }
 
-      // Call the server action to delete the therapist by name
-      const result = await deleteTherapist(therapist.name);
+      // Show loading toast
+      const loadingToast = toast.loading(`De-registering ${therapistName}...`);
+
+      // Call the server action
+      const result = await deleteTherapist(therapistName);
 
       if (result.success) {
         // Remove therapist from local state
@@ -92,7 +117,7 @@ export default function DemotionPage({ therapist: initialTherapists }) {
         toast.success(
           <div>
             <div className="font-semibold">Success!</div>
-            <div>{therapist.name} has been de-registered</div>
+            <div>{therapistName} has been de-registered</div>
           </div>,
           {
             duration: 4000,
@@ -123,20 +148,22 @@ export default function DemotionPage({ therapist: initialTherapists }) {
   const stats = {
     total: Array.isArray(therapists) ? therapists.length : 0,
     verified: Array.isArray(therapists)
-      ? therapists.filter((t) => t?.verified).length
+      ? therapists.filter((t) => t?.verified || t?.isVerified).length
       : 0,
     seasoned: Array.isArray(therapists)
-      ? therapists.filter((t) => t?.level === "seasoned").length
+      ? therapists.filter((t) => (t?.level || t?.rank) === "seasoned").length
       : 0,
     specialist: Array.isArray(therapists)
-      ? therapists.filter((t) => t?.level === "specialist").length
+      ? therapists.filter((t) => (t?.level || t?.rank) === "specialist").length
       : 0,
     novice: Array.isArray(therapists)
-      ? therapists.filter((t) => t?.level === "novice").length
+      ? therapists.filter(
+          (t) => (t?.level || t?.rank) === "novice" || !t?.level,
+        ).length
       : 0,
   };
 
-  // Helper functions
+  // Helper function to format education
   const formatEducation = (education) => {
     if (!education) return "Not specified";
     return education.charAt(0).toUpperCase() + education.slice(1);
@@ -198,16 +225,42 @@ export default function DemotionPage({ therapist: initialTherapists }) {
       {/* Therapist List */}
       {filteredTherapists.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 sm:gap-6">
-          {filteredTherapists.map((therapist) => (
-            <TherapistCard
-              key={therapist?.id || Math.random()}
-              therapist={therapist}
-              handleDeregister={handleDeregister}
-              getLevelColor={getLevelColor}
-              getLevelLabel={getLevelLabel}
-              formatEducation={formatEducation}
-            />
-          ))}
+          {filteredTherapists.map((therapist, index) => {
+            // Ensure therapist has required fields
+            const safeTherapist = {
+              id: therapist.id || therapist._id || `temp-${index}`,
+              name:
+                therapist.name ||
+                therapist.fullName ||
+                `Therapist ${index + 1}`,
+              email: therapist.email || therapist.emailAddress || "",
+              emailAddress: therapist.emailAddress || therapist.email || "",
+              level: therapist.level || therapist.rank || "novice",
+              verified: therapist.verified || therapist.isVerified || false,
+              experience:
+                therapist.experience || therapist.yearsExperience || 0,
+              education:
+                therapist.education ||
+                therapist.qualification ||
+                "Not specified",
+              hours: therapist.hours || therapist.weeklyHours || 0,
+              price: therapist.price || therapist.sessionPrice || 0,
+              reviews: therapist.reviews || therapist.totalReviews || 0,
+              rating: therapist.rating || therapist.averageRating || 0,
+              image: therapist.image || therapist.profileImage || "",
+            };
+
+            return (
+              <TherapistCard
+                key={safeTherapist.id}
+                therapist={safeTherapist}
+                handleDeregister={handleDeregister}
+                getLevelColor={getLevelColor}
+                getLevelLabel={getLevelLabel}
+                formatEducation={formatEducation}
+              />
+            );
+          })}
         </div>
       ) : (
         <EmptyState />
