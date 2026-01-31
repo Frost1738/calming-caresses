@@ -11,6 +11,15 @@ function deterministicRandom(seed) {
 
 export default function AnotherLoader() {
   const [loading, setLoading] = useState(true);
+  const [pulsePhase, setPulsePhase] = useState(0);
+
+  // Animate pulsePhase between 0, 1, 2
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPulsePhase((prev) => (prev + 1) % 3);
+    }, 600);
+    return () => clearInterval(interval);
+  }, []);
 
   // Memoized bubble positions for this component
   const bubblePositions = useMemo(
@@ -31,8 +40,6 @@ export default function AnotherLoader() {
       }),
     [],
   );
-
-  // Your loader logic...
 
   return (
     <div className="fixed inset-0 z-50 bg-white">
@@ -55,7 +62,7 @@ export default function AnotherLoader() {
       </div>
 
       {/* Main animation container */}
-      <div className="relative flex flex-col items-center">
+      <div className="relative flex flex-col items-center justify-center min-h-screen">
         {/* Breathing Icon Container */}
         <div className="relative mb-10">
           {/* Morphing container - like Supabase's breathing circle */}
@@ -67,12 +74,10 @@ export default function AnotherLoader() {
                   ? "border-emerald-400/40 scale-100"
                   : pulsePhase === 1
                     ? "border-blue-400/60 scale-110"
-                    : pulsePhase === 2
-                      ? "border-purple-400/40 scale-105"
-                      : "border-emerald-300/50 scale-95"
+                    : "border-purple-400/40 scale-105"
               }`}
               style={{
-                animation: "none", // We control via React state
+                animation: "none",
               }}
             />
 
@@ -83,9 +88,7 @@ export default function AnotherLoader() {
                   ? "border-blue-300/30 scale-95"
                   : pulsePhase === 1
                     ? "border-purple-300/50 scale-105"
-                    : pulsePhase === 2
-                      ? "border-emerald-300/40 scale-100"
-                      : "border-blue-300/40 scale-98"
+                    : "border-emerald-300/40 scale-100"
               }`}
             />
 
@@ -96,9 +99,7 @@ export default function AnotherLoader() {
                   ? "text-emerald-600 scale-100 opacity-90"
                   : pulsePhase === 1
                     ? "text-blue-600 scale-110 opacity-100"
-                    : pulsePhase === 2
-                      ? "text-purple-600 scale-105 opacity-95"
-                      : "text-emerald-500 scale-98 opacity-85"
+                    : "text-purple-600 scale-105 opacity-95"
               }`}
             />
 
@@ -121,7 +122,7 @@ export default function AnotherLoader() {
           </div>
         </div>
 
-        {/* Your three-dot loader (keeping what you like) */}
+        {/* Your three-dot loader */}
         <div className="text-center">
           <p className="text-emerald-800 font-medium text-lg tracking-wide mb-4">
             Preparing your session...
