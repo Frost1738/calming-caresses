@@ -98,10 +98,7 @@ export async function getAllTherapists() {
 
     return therapists;
   } catch (error) {
-    return {
-      message: "we couldnt get your therapist",
-      error: error.message,
-    };
+    return [];
   }
 }
 
