@@ -33,7 +33,7 @@ export default function AfterCare({ postSessionTips }) {
           <span className="font-semibold lg:text-2xl w-auto mr-[2px] xl:text-3xl font-[family-name:var(--font-montserrat)]">
             {postSessionTip.firstMaintip || "stay hydrated 💦"}
           </span>{" "}
-          {postSessionTip.firstExplation ||
+          {postSessionTip.firstExplanation ||
             "to help flush out all the toxins and reduce soreness"}
         </p>
 

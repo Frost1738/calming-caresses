@@ -1,17 +1,26 @@
 import React from "react";
 import TherapistAppointments from "./therapistAppointments";
-import { getTherapistsBooking } from "@/app/ApiServices/getFunctions";
+import { getRole, getTherapistsBooking } from "@/app/ApiServices/getFunctions";
+import { createSupabaseServerClient } from "@/app/supabase/server";
 
 export default async function Page({ searchParams }) {
   const { name } = await searchParams;
   const personalizedBookings = await getTherapistsBooking(name);
+  const supabase = await createSupabaseServerClient();
 
-  return (
-    <div>
-      <TherapistAppointments
-        personalizedBookings={personalizedBookings}
-        name={name}
-      />
-    </div>
-  );
+  const { data: sessionData } = await supabase.auth.getSession();
+
+  const profile = await getRole(sessionData?.session?.user?.id);
+  const [{ role }] = profile;
+
+  if (role == "therapist") {
+    return (
+      <div>
+        <TherapistAppointments
+          personalizedBookings={personalizedBookings}
+          name={name}
+        />
+      </div>
+    );
+  }
 }

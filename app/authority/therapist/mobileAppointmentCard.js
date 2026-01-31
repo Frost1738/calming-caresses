@@ -1,3 +1,4 @@
+import React from "react";
 import {
   User,
   Mail,
@@ -7,23 +8,23 @@ import {
   ChevronUp,
 } from "lucide-react";
 import {
+  getDisplayStatus,
   getStatusColor,
   getStatusIcon,
   getStatusText,
-  isPastDate,
-} from "./StatusHelpers";
-import { AppointmentActions } from "./AppointmentActions";
+} from "./statusUtils";
 
-export const MobileAppointmentCard = ({
+export default function MobileAppointmentCard({
   appointment,
   expandedAppointment,
-  onToggleDetails,
-  onEdit,
-  onCancel,
-  onComplete,
-  onMarkNoShow,
-  isLoading,
-}) => {
+  toggleAppointmentDetails,
+  renderActionButtons,
+  isPastDate,
+}) {
+  const displayStatus = getDisplayStatus(
+    appointment.status,
+    appointment.completed,
+  );
   const isPast = isPastDate(appointment.date);
 
   return (
@@ -40,7 +41,7 @@ export const MobileAppointmentCard = ({
           </div>
           <div>
             <div className="font-medium text-white">
-              {appointment.clientName}
+              {appointment.clientname}
               {isPast && (
                 <span className="ml-2 text-xs text-slate-400 bg-slate-800/50 px-2 py-0.5 rounded">
                   Past
@@ -63,7 +64,10 @@ export const MobileAppointmentCard = ({
             </div>
           </div>
         </div>
-        <button onClick={() => onToggleDetails(appointment.id)} className="p-1">
+        <button
+          onClick={() => toggleAppointmentDetails(appointment.id)}
+          className="p-1"
+        >
           {expandedAppointment === appointment.id ? (
             <ChevronUp className="w-5 h-5 text-slate-400" />
           ) : (
@@ -83,7 +87,7 @@ export const MobileAppointmentCard = ({
         <div className="text-sm">
           <div className="text-slate-400">Service</div>
           <div className="text-white font-medium">
-            {appointment.massageName}
+            {appointment.massage_name}
           </div>
         </div>
       </div>
@@ -94,7 +98,7 @@ export const MobileAppointmentCard = ({
           <div className="flex items-center gap-2 text-sm">
             <Mail className="w-4 h-4 text-slate-400" />
             <span className="text-slate-300">
-              {appointment.clientEmail || "No email"}
+              {appointment.clientemail || "No email"}
             </span>
           </div>
           <div className="flex items-center gap-2 text-sm">
@@ -118,15 +122,8 @@ export const MobileAppointmentCard = ({
 
       {/* Actions */}
       <div className="mt-4 pt-4 border-t border-slate-700/30">
-        <AppointmentActions
-          appointment={appointment}
-          isLoading={isLoading}
-          onEdit={onEdit}
-          onCancel={onCancel}
-          onComplete={onComplete}
-          onMarkNoShow={onMarkNoShow}
-        />
+        {renderActionButtons(appointment)}
       </div>
     </div>
   );
-};
+}

@@ -83,7 +83,7 @@ export default function AppointmentsSlider({ appointments, userName }) {
         {hasPrev && (
           <button
             onClick={prevSlide}
-            className="absolute left-[10%] top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 w-12 h-12 md:w-14 md:h-14 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/20 shadow-xl"
+            className="absolute max-sm:left-[10%] left-[5%] top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 w-12 h-12 md:w-14 md:h-14 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/20 shadow-xl"
             aria-label="Previous appointments"
           >
             <svg
@@ -114,8 +114,8 @@ export default function AppointmentsSlider({ appointments, userName }) {
                   <AppointmentCard
                     date={appointment.date}
                     time={appointment.time}
-                    session={appointment.massageName}
-                    therapist={appointment.therapistName}
+                    session={appointment.massage_name}
+                    therapist={appointment.therapistname}
                     room={appointment.room}
                   />
                 </div>
@@ -127,7 +127,7 @@ export default function AppointmentsSlider({ appointments, userName }) {
         {hasNext && (
           <button
             onClick={nextSlide}
-            className="absolute right-[10%] top-1/2 -translate-y-1/2 translate-x-1/2 z-10 w-12 h-12 md:w-14 md:h-14 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/20 shadow-xl"
+            className="absolute max-sm:right-[10%] right-[5%] top-1/2 -translate-y-1/2 translate-x-1/2 z-10 w-12 h-12 md:w-14 md:h-14 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/20 shadow-xl"
             aria-label="Next appointments"
           >
             <svg

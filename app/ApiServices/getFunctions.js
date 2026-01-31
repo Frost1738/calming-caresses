@@ -3,9 +3,9 @@ import { createBrowserSupabaseClient } from "../supabase/supabaseClient";
 const supabase = createBrowserSupabaseClient();
 export async function getReviews() {
   try {
-    let { data: reviews, error } = await supabase.from("reviews").select("*");
+    let { data: reviews, error } = await supabase.from("review").select("*");
 
-    if (error) throw new error();
+    if (error) throw error;
 
     return reviews;
   } catch (error) {
@@ -23,7 +23,7 @@ export async function getTherapists(tier) {
       .select("*")
       .eq("level", tier);
 
-    if (error) throw new error();
+    if (error) throw error;
 
     return therapists;
   } catch (error) {
@@ -41,7 +41,7 @@ export async function getRooms() {
       .select("*")
       .order("id", { ascending: true });
 
-    if (error) throw new error();
+    if (error) throw error;
 
     return rooms;
   } catch (error) {
@@ -57,9 +57,9 @@ export async function getAppointments(email) {
     let { data: bookings, error } = await supabase
       .from("bookings")
       .select("*")
-      .eq("clientEmail", email);
+      .eq("clientemail", email);
 
-    if (error) throw new error();
+    if (error) throw error;
 
     return bookings;
   } catch (error) {
@@ -94,7 +94,7 @@ export async function getAllTherapists() {
       .from("therapists")
       .select("*");
 
-    if (error) throw new error();
+    if (error) throw error;
 
     return therapists;
   } catch (error) {
@@ -127,12 +127,13 @@ export async function getTherapistsBooking(therapistsName) {
     let { data: bookings, error } = await supabase
       .from("bookings")
       .select("*")
-      .eq("therapistName", therapistsName);
+      .eq("therapistname", therapistsName);
 
-    if (error) throw new error();
+    if (error) throw error;
 
     return bookings;
   } catch (error) {
+    console.log(error);
     return {
       message: "we couldnt get your booking",
       error: error.message,
@@ -145,10 +146,12 @@ export async function getCompletedBookingsForTips(therapistsName) {
     let { data: bookings, error } = await supabase
       .from("bookings")
       .select("*")
-      .eq("therapistName", therapistsName)
+      .eq("therapistname", therapistsName)
       .eq("status", "completed");
 
-    if (error) throw new error();
+    console.log("game bubu", bookings);
+
+    if (error) throw error;
 
     return bookings;
   } catch (error) {
@@ -176,9 +179,25 @@ export async function getAllBookings() {
 export async function getPostSessionTip(email) {
   try {
     let { data: postSessionTips, error } = await supabase
-      .from("post session tips")
+      .from("post_session_tips")
       .select("*")
-      .eq("clientEmail", email);
+      .eq("client_email", email);
+
+    if (error) throw error;
+    return postSessionTips;
+  } catch (error) {
+    return {
+      message: "we couldnt get your tips",
+      error: error.message,
+    };
+  }
+}
+
+export async function getAllPostSessionTips() {
+  try {
+    let { data: postSessionTips, error } = await supabase
+      .from("post_session_tips")
+      .select("*");
 
     if (error) throw error;
     return postSessionTips;
@@ -195,7 +214,7 @@ export async function getReceipts(clientEmail) {
     let { data: bookings, error } = await supabase
       .from("bookings")
       .select("*")
-      .eq("clientEmail", clientEmail)
+      .eq("clientemail", clientEmail)
       .eq("status", "completed");
 
     if (error) throw new error();
@@ -204,6 +223,25 @@ export async function getReceipts(clientEmail) {
   } catch (error) {
     return {
       message: "we couldnt get your bookings",
+      error: error.message,
+    };
+  }
+}
+
+export async function getRole(userId) {
+  try {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", userId);
+
+    console.log("i do care", profile);
+
+    return profile;
+  } catch (error) {
+    console.log(error);
+    return {
+      message: "who are you",
       error: error.message,
     };
   }

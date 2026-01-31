@@ -1,13 +1,26 @@
 import React from "react";
 import AdvertCard from "./advertCard";
-import ExperienceForm from "./experiences/experienceForm";
 
-export default function Page() {
+import { createSupabaseServerClient } from "@/app/supabase/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/lib/auth";
+
+export default async function Page() {
+  const supabase = await createSupabaseServerClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const session = await getServerSession(authOptions);
+
+  const display_name = user?.user_metadata?.display_name || session.user?.name;
+
   return (
     <div className="h-[200rem] bg-[#FFFFF2] max-md:h-auto w-[100%] flex justify-center items-center">
       <main className="h-[180rem] max-md:h-auto w-[90%] bg-[#312F2F] border-rounded-md rounded-lg grid auto-rows-[600px] max-sm:grid-cols-[repeat(auto-fill,minmax(150px,1fr))] grid-cols-[repeat(auto-fill,minmax(350px,1fr))] gap-[20px] p-[2rem]">
         <AdvertCard
           title="hot stone massage"
+          name={display_name}
           description="Heated volcanic stones melt away tension and promote deep relaxation through targeted thermotherapy."
           address="https://www.webmd.com/balance/hot-stone-massage-what-to-know"
           images={[
@@ -18,6 +31,7 @@ export default function Page() {
         />
         <AdvertCard
           title="swedish massage"
+          name={display_name}
           description="Classic European techniques using long, flowing strokes to improve circulation and relieve muscle stiffness"
           address="https://www.webmd.com/balance/guide/swedish-massage"
           images={[
@@ -28,6 +42,7 @@ export default function Page() {
         />
         <AdvertCard
           title="cultural massage"
+          name={display_name}
           description="Traditional healing methods from indigenous cultures, blending ancient wisdom with therapeutic touch."
           address="https://www.webmd.com/balance/guide/swedish-massage"
           images={[
@@ -38,6 +53,7 @@ export default function Page() {
         />
         <AdvertCard
           title="Shiatsu massage"
+          name={display_name}
           description="Japanese finger pressure therapy that balances energy flow along the body's meridians for holistic harmony."
           address="https://www.webmd.com/balance/guide/swedish-massage"
           images={[
@@ -48,6 +64,7 @@ export default function Page() {
         />
         <AdvertCard
           title="aromatherapy massage"
+          name={display_name}
           description="Essential oil-infused treatment where scent and touch combine to enhance mood and alleviate stress."
           address="https://www.webmd.com/balance/guide/swedish-massage"
           images={[
@@ -58,6 +75,7 @@ export default function Page() {
         />
         <AdvertCard
           title="thai massage"
+          name={display_name}
           description="Active, yoga-like stretching combined with pressure point work to increase flexibility and energy flow."
           address="https://www.webmd.com/balance/guide/swedish-massage"
           images={[
@@ -68,6 +86,7 @@ export default function Page() {
         />
         <AdvertCard
           title="reflexology massage"
+          name={display_name}
           description="Precise pressure applied to feet and hands, corresponding to organs and systems throughout the body."
           address="https://www.webmd.com/balance/guide/swedish-massage"
           images={[
@@ -78,6 +97,7 @@ export default function Page() {
         />
         <AdvertCard
           title="Sports massage"
+          name={display_name}
           description="Targeted therapy for athletes focusing on injury prevention, recovery, and peak performance preparation."
           address="https://www.webmd.com/balance/guide/swedish-massage"
           images={[
@@ -89,6 +109,7 @@ export default function Page() {
 
         <AdvertCard
           title="prenatal massage"
+          name={display_name}
           description="Specialized, side-lying techniques providing comfort and relief during pregnancy's physical changes."
           address="https://www.webmd.com/balance/guide/swedish-massage"
           images={[
@@ -99,6 +120,7 @@ export default function Page() {
         />
         <AdvertCard
           title="trigger point therapy"
+          name={display_name}
           description="Focused pressure on specific muscle knots to release chronic tension and referred pain patterns."
           address="https://www.webmd.com/balance/guide/swedish-massage"
           images={[
@@ -108,6 +130,7 @@ export default function Page() {
           ]}
         />
         <AdvertCard
+          name={display_name}
           title="massage chair"
           description="Automated therapeutic sessions combining vibration, kneading, and heat for convenient full-body relief."
           address="https://www.webmd.com/balance/guide/swedish-massage"

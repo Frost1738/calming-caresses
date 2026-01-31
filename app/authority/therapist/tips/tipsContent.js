@@ -22,9 +22,14 @@ import {
   Sparkle,
 } from "lucide-react";
 import { TherapistContext } from "../therapistContext";
-import { getCompletedBookingsForTips } from "@/app/ApiServices/getFunctions";
+import {
+  getAllBookings,
+  getAllPostSessionTips,
+  getCompletedBookingsForTips,
+} from "@/app/ApiServices/getFunctions";
 import { giveTip } from "@/app/ApiServices/serverActions";
 import { IoIosFlower } from "react-icons/io";
+import { findMatchingIds, findNonMatchingIds } from "@/app/helpers/helper";
 
 export default function ClientListPage() {
   const [clients, setClients] = useState([]);
@@ -43,6 +48,7 @@ export default function ClientListPage() {
   const [sending, setSending] = useState(false);
   const [notification, setNotification] = useState(null);
   const { therapistName } = useContext(TherapistContext);
+  console.log("what", selectedClient);
 
   const themeColors = {
     primary: {
@@ -86,7 +92,21 @@ export default function ClientListPage() {
     async function fetchBookings() {
       try {
         setLoading(true);
-        const bookings = await getCompletedBookingsForTips(therapistName);
+        const allBookings = await getAllBookings();
+        const allPostSesssionTips = await getAllPostSessionTips();
+
+        const canBeTipped = findNonMatchingIds(
+          allBookings,
+          allPostSesssionTips,
+        );
+
+        const rawBookings = await getCompletedBookingsForTips(therapistName);
+        const possibleToBeTipped = allBookings.filter(
+          (booking, i) => booking.id == canBeTipped[i],
+        );
+        const bookings = possibleToBeTipped.filter((booking, i) =>
+          rawBookings.some((rawBooking) => rawBooking.id === booking.id),
+        );
 
         // Transform bookings to client format with color coding
         const clientsData = bookings.map((booking, index) => {
@@ -100,13 +120,14 @@ export default function ClientListPage() {
 
           return {
             id: booking.id || index + 1,
-            name: booking.clientName || `Client ${index + 1}`,
-            email: booking.clientEmail || `client${index + 1}@email.com`,
+            name: booking.clientname || `Client ${index + 1}`,
+            email: booking.clientemail || `client${index + 1}@email.com`,
             bookingDate: booking.date,
             service: booking.service,
             bookingData: booking,
             color: colors,
-            serviceConsumed: booking.massageName, // Store massageName as serviceConsumed
+            serviceConsumed: booking.massage_name,
+            massageId: booking.id,
           };
         });
 
@@ -159,6 +180,7 @@ export default function ClientListPage() {
         clientEmail: selectedClient.email,
         therapistName: therapistName,
         serviceConsumed: selectedClient.serviceConsumed, // Pass the service consumed
+        massageId: selectedClient.massageId,
       };
 
       const result = await giveTip(tipData);
@@ -466,233 +488,250 @@ export default function ClientListPage() {
       </div>
 
       {/* Tips Modal */}
+      {/* Tips Modal - RESPONSIVE VERSION */}
       {isModalOpen && selectedClient && (
-        <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 flex items-center justify-center p-2 sm:p-4 md:p-6 z-50 touch-manipulation">
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => !sending && setIsModalOpen(false)}
           />
-          {/*modal window*/}
 
           <div
-            className="relative w-full max-w-2xl h-[95vh] bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-2xl rounded-3xl border border-white/20 shadow-2xl overflow-hidden mx-auto my-4"
-            style={{ animation: "modalAppear 0.4s ease-out" }}
+            className="relative w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl h-[90dvh] sm:h-[85dvh] md:h-[80dvh] bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-2xl rounded-xl sm:rounded-2xl md:rounded-3xl border border-white/20 shadow-2xl overflow-hidden mx-auto"
+            onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header */}
-            <div className="p-4 sm:p-6 md:p-8 border-b border-white/10">
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 sm:gap-0 mb-4 sm:mb-6">
-                <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
-                  <div className="relative">
-                    <div className="absolute -inset-2 sm:-inset-3 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl sm:rounded-2xl blur opacity-30"></div>
-                    <div className="relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl sm:rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
-                      <IoIosFlower className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+            {/* Modal Content Container - Flex column layout */}
+            <div className="flex flex-col h-full">
+              {/* HEADER - Sticky top */}
+              <div className="p-3 sm:p-4 md:p-6 border-b border-white/10 flex-shrink-0">
+                <div className="flex items-start justify-between gap-2 sm:gap-3 md:gap-4">
+                  <div className="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-0 flex-1">
+                    {/* Icon */}
+                    <div className="relative flex-shrink-0">
+                      <div className="absolute -inset-1 sm:-inset-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg sm:rounded-xl blur opacity-30"></div>
+                      <div className="relative w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-lg sm:rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
+                        <IoIosFlower className="w-3 h-3 sm:w-4 sm:h-4 md:w-7 md:h-7 text-white" />
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <div className="min-w-0 flex-1">
+                      <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white truncate">
+                        Share Wellness Tips
+                      </h2>
+                      <p className="text-xs sm:text-sm md:text-base text-white/60 truncate">
+                        For {selectedClient.name}
+                      </p>
                     </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white truncate">
-                      Share Wellness
-                    </h2>
-                    <p className="text-xs sm:text-sm md:text-base text-white/60 truncate">
-                      Craft personalized tips for {selectedClient.name}
-                    </p>
-                  </div>
+
+                  {/* Close Button */}
+                  <button
+                    onClick={() => !sending && setIsModalOpen(false)}
+                    className="p-1.5 sm:p-2 rounded-lg hover:bg-white/10 transition-colors disabled:opacity-50 active:scale-95 touch-manipulation"
+                    disabled={sending}
+                    aria-label="Close"
+                  >
+                    <X className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white/60 hover:text-white" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => !sending && setIsModalOpen(false)}
-                  className="self-end sm:self-start p-1.5 sm:p-2 rounded-lg sm:rounded-xl hover:bg-white/10 transition-colors disabled:opacity-50 touch-manipulation active:scale-95"
-                  disabled={sending}
-                  aria-label="Close modal"
-                >
-                  <X className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white/60 hover:text-white" />
-                </button>
+
+                {/* Client Info */}
+                <div className="mt-3 sm:mt-4 flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-gradient-to-r from-white/5 to-white/2">
+                  <div
+                    className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-r ${selectedClient.color.bg} flex items-center justify-center flex-shrink-0`}
+                  >
+                    <User className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-white" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm sm:text-base font-medium text-white truncate">
+                      {selectedClient.name}
+                    </div>
+                    <div className="text-xs sm:text-sm text-white/60 truncate">
+                      {selectedClient.email}
+                    </div>
+                  </div>
+                  {selectedClient.serviceConsumed && (
+                    <div className="px-2 py-1 sm:px-3 sm:py-1.5 rounded-md bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-300 text-xs sm:text-sm whitespace-nowrap flex-shrink-0">
+                      {selectedClient.serviceConsumed}
+                    </div>
+                  )}
+                </div>
               </div>
 
-              {/* Client Info */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg sm:rounded-xl bg-gradient-to-r from-white/5 to-white/2">
-                <div
-                  className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-r ${selectedClient.color.bg} flex items-center justify-center flex-shrink-0`}
-                >
-                  <User className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm sm:text-base md:text-lg text-white font-medium truncate">
-                    {selectedClient.name}
+              {/* SCROLLABLE CONTENT AREA */}
+              <div className="flex-1 overflow-y-auto overscroll-contain">
+                <div className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-5 md:space-y-6">
+                  {/* TIP 1 */}
+                  <div className="space-y-2 sm:space-y-3">
+                    <div className="flex items-start gap-2 sm:gap-3">
+                      <div className="p-1.5 sm:p-2 rounded-md bg-gradient-to-r from-cyan-500/20 to-blue-500/20 flex-shrink-0 mt-0.5">
+                        <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-cyan-400" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <label className="block">
+                          <span className="text-sm sm:text-base md:text-lg font-semibold text-white block mb-1">
+                            First Main Tip{" "}
+                            <span className="text-rose-400">*</span>
+                          </span>
+                          <input
+                            type="text"
+                            value={tips.mainTip1}
+                            onChange={(e) =>
+                              setTips({ ...tips, mainTip1: e.target.value })
+                            }
+                            placeholder="Morning meditation routine"
+                            className="w-full px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 outline-none text-white placeholder:text-white/30 backdrop-blur-sm disabled:opacity-50"
+                            disabled={sending}
+                          />
+                        </label>
+                      </div>
+                    </div>
+                    <label className="block">
+                      <span className="text-xs sm:text-sm font-medium text-white/80 block mb-1">
+                        Why this matters
+                      </span>
+                      <textarea
+                        value={tips.explanation1}
+                        onChange={(e) =>
+                          setTips({ ...tips, explanation1: e.target.value })
+                        }
+                        rows={2}
+                        className="w-full px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 outline-none text-white placeholder:text-white/30 resize-none backdrop-blur-sm disabled:opacity-50"
+                        placeholder="Explain the benefits and importance..."
+                        disabled={sending}
+                      />
+                    </label>
                   </div>
-                  <div className="text-xs sm:text-sm text-white/60 line-clamp-2">
-                    Just had a{" "}
-                    {selectedClient.serviceConsumed?.toLowerCase() || "massage"}{" "}
-                    session. Please guide them.
+
+                  {/* TIP 2 */}
+                  <div className="space-y-2 sm:space-y-3">
+                    <div className="flex items-start gap-2 sm:gap-3">
+                      <div className="p-1.5 sm:p-2 rounded-md bg-gradient-to-r from-emerald-500/20 to-teal-500/20 flex-shrink-0 mt-0.5">
+                        <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-emerald-400" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <label className="block">
+                          <span className="text-sm sm:text-base md:text-lg font-semibold text-white block mb-1">
+                            Second Main Tip{" "}
+                            <span className="text-rose-400">*</span>
+                          </span>
+                          <input
+                            type="text"
+                            value={tips.mainTip2}
+                            onChange={(e) =>
+                              setTips({ ...tips, mainTip2: e.target.value })
+                            }
+                            placeholder="Posture awareness throughout day"
+                            className="w-full px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 outline-none text-white placeholder:text-white/30 backdrop-blur-sm disabled:opacity-50"
+                            disabled={sending}
+                          />
+                        </label>
+                      </div>
+                    </div>
+                    <label className="block">
+                      <span className="text-xs sm:text-sm font-medium text-white/80 block mb-1">
+                        Implementation guide
+                      </span>
+                      <textarea
+                        value={tips.explanation2}
+                        onChange={(e) =>
+                          setTips({ ...tips, explanation2: e.target.value })
+                        }
+                        rows={2}
+                        className="w-full px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 outline-none text-white placeholder:text-white/30 resize-none backdrop-blur-sm disabled:opacity-50"
+                        placeholder="How to implement in daily life..."
+                        disabled={sending}
+                      />
+                    </label>
+                  </div>
+
+                  {/* BONUS TIP */}
+                  <div className="space-y-2 sm:space-y-3">
+                    <div className="flex items-start gap-2 sm:gap-3">
+                      <div className="p-1.5 sm:p-2 rounded-md bg-gradient-to-r from-amber-500/20 to-orange-500/20 flex-shrink-0 mt-0.5">
+                        <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-amber-400" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <label className="block">
+                          <span className="text-sm sm:text-base md:text-lg font-semibold text-white block mb-1">
+                            ✨ Bonus Tip{" "}
+                            <span className="text-white/40 text-xs">
+                              (Optional)
+                            </span>
+                          </span>
+                          <textarea
+                            value={tips.bonusTip}
+                            onChange={(e) =>
+                              setTips({ ...tips, bonusTip: e.target.value })
+                            }
+                            rows={2}
+                            className="w-full px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-gradient-to-r from-amber-500/5 to-orange-500/5 border border-amber-500/20 rounded-lg focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 outline-none text-white placeholder:text-white/30 resize-none backdrop-blur-sm disabled:opacity-50"
+                            placeholder="Extra magic for their wellness journey..."
+                            disabled={sending}
+                          />
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                {selectedClient.serviceConsumed && (
-                  <div className="self-end sm:self-auto mt-2 sm:mt-0 sm:ml-auto px-2 py-1 sm:px-3 sm:py-1 rounded-md sm:rounded-lg bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-300 text-xs sm:text-sm whitespace-nowrap">
-                    {selectedClient.serviceConsumed}
+              </div>
+
+              {/* FOOTER - Sticky bottom */}
+              <div className="p-3 sm:p-4 md:p-6 border-t border-white/10 flex-shrink-0">
+                {notification && (
+                  <div
+                    className={`mb-3 sm:mb-4 p-3 rounded-lg backdrop-blur-sm ${
+                      notification.type === "success"
+                        ? "bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30"
+                        : "bg-gradient-to-r from-rose-500/20 to-pink-500/20 border border-rose-500/30"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 text-white">
+                      {notification.type === "success" ? (
+                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 flex-shrink-0" />
+                      ) : (
+                        <X className="w-4 h-4 sm:w-5 sm:h-5 text-rose-400 flex-shrink-0" />
+                      )}
+                      <span className="text-xs sm:text-sm">
+                        {notification.message}
+                      </span>
+                    </div>
                   </div>
                 )}
-              </div>
-            </div>
 
-            {/* Modal Form */}
-            <div className="p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8 max-h-[50vh] sm:max-h-[60vh] overflow-y-auto overscroll-contain">
-              {/* Tip 1 */}
-              <div className="space-y-3 sm:space-y-4">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                  <div className="p-1.5 sm:p-2 rounded-md sm:rounded-lg bg-gradient-to-r from-cyan-500/20 to-blue-500/20 self-start sm:self-auto">
-                    <Award className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400" />
-                  </div>
-                  <label className="block flex-1 w-full">
-                    <span className="text-base sm:text-lg md:text-xl font-semibold text-white block mb-1 sm:mb-2">
-                      First Main Tip <span className="text-rose-400">*</span>
-                    </span>
-                    <input
-                      type="text"
-                      value={tips.mainTip1}
-                      onChange={(e) =>
-                        setTips({ ...tips, mainTip1: e.target.value })
-                      }
-                      placeholder="e.g., Morning meditation routine"
-                      className="w-full px-3 py-3 sm:px-4 sm:py-3 md:px-5 md:py-4 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 outline-none text-white placeholder:text-white/30 backdrop-blur-sm transition-all"
-                      disabled={sending}
-                    />
-                  </label>
-                </div>
-                <label className="block">
-                  <span className="text-xs sm:text-sm font-medium text-white/80 block mb-1 sm:mb-2">
-                    Why this matters...
-                  </span>
-                  <textarea
-                    value={tips.explanation1}
-                    onChange={(e) =>
-                      setTips({ ...tips, explanation1: e.target.value })
-                    }
-                    rows={2}
-                    className="w-full px-3 py-3 sm:px-4 sm:py-3 md:px-5 md:py-4 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 outline-none text-white placeholder:text-white/30 resize-none backdrop-blur-sm"
-                    placeholder="Explain the benefits and importance..."
+                {/* BUTTONS - Responsive layout */}
+                <div className="flex flex-col xs:flex-row gap-2 sm:gap-3">
+                  <button
+                    onClick={() => !sending && setIsModalOpen(false)}
+                    className="flex-1 px-4 py-2.5 sm:px-5 sm:py-3 text-sm sm:text-base border border-white/20 text-white rounded-lg hover:bg-white/5 disabled:opacity-50 transition-all active:scale-95 touch-manipulation"
                     disabled={sending}
-                  />
-                </label>
-              </div>
-
-              {/* Tip 2 */}
-              <div className="space-y-3 sm:space-y-4">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                  <div className="p-1.5 sm:p-2 rounded-md sm:rounded-lg bg-gradient-to-r from-emerald-500/20 to-teal-500/20 self-start sm:self-auto">
-                    <Star className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
-                  </div>
-                  <label className="block flex-1 w-full">
-                    <span className="text-base sm:text-lg md:text-xl font-semibold text-white block mb-1 sm:mb-2">
-                      Second Main Tip <span className="text-rose-400">*</span>
-                    </span>
-                    <input
-                      type="text"
-                      value={tips.mainTip2}
-                      onChange={(e) =>
-                        setTips({ ...tips, mainTip2: e.target.value })
-                      }
-                      placeholder="e.g., Posture awareness throughout the day"
-                      className="w-full px-3 py-3 sm:px-4 sm:py-3 md:px-5 md:py-4 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 outline-none text-white placeholder:text-white/30 backdrop-blur-sm transition-all"
-                      disabled={sending}
-                    />
-                  </label>
-                </div>
-                <label className="block">
-                  <span className="text-xs sm:text-sm font-medium text-white/80 block mb-1 sm:mb-2">
-                    Implementation guide...
-                  </span>
-                  <textarea
-                    value={tips.explanation2}
-                    onChange={(e) =>
-                      setTips({ ...tips, explanation2: e.target.value })
-                    }
-                    rows={2}
-                    className="w-full px-3 py-3 sm:px-4 sm:py-3 md:px-5 md:py-4 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 outline-none text-white placeholder:text-white/30 resize-none backdrop-blur-sm"
-                    placeholder="How to implement this in daily life..."
-                    disabled={sending}
-                  />
-                </label>
-              </div>
-
-              {/* Bonus Tip */}
-              <div className="space-y-3 sm:space-y-4">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                  <div className="p-1.5 sm:p-2 rounded-md sm:rounded-lg bg-gradient-to-r from-amber-500/20 to-orange-500/20 self-start sm:self-auto">
-                    <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
-                  </div>
-                  <label className="block flex-1 w-full">
-                    <span className="text-base sm:text-lg md:text-xl font-semibold text-white block mb-1 sm:mb-2">
-                      ✨ Bonus Tip{" "}
-                      <span className="text-white/40 text-xs sm:text-sm">
-                        (Optional)
-                      </span>
-                    </span>
-                    <textarea
-                      value={tips.bonusTip}
-                      onChange={(e) =>
-                        setTips({ ...tips, bonusTip: e.target.value })
-                      }
-                      rows={2}
-                      className="w-full px-3 py-3 sm:px-4 sm:py-3 md:px-5 md:py-4 text-sm sm:text-base bg-gradient-to-r from-amber-500/5 to-orange-500/5 border border-amber-500/20 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 outline-none text-white placeholder:text-white/30 resize-none backdrop-blur-sm"
-                      placeholder="A little extra magic for their wellness journey..."
-                      disabled={sending}
-                    />
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Footer */}
-            <div className="p-4 sm:p-6 md:p-8 border-t border-white/10">
-              {notification && (
-                <div
-                  className={`mb-4 sm:mb-6 p-3 sm:p-4 rounded-lg sm:rounded-xl backdrop-blur-sm ${
-                    notification.type === "success"
-                      ? "bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30"
-                      : "bg-gradient-to-r from-rose-500/20 to-pink-500/20 border border-rose-500/30"
-                  }`}
-                >
-                  <div className="flex items-center gap-2 sm:gap-3 text-white">
-                    {notification.type === "success" ? (
-                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-400 flex-shrink-0" />
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSubmit}
+                    disabled={!tips.mainTip1 || !tips.mainTip2 || sending}
+                    className={`flex-1 px-4 py-2.5 sm:px-5 sm:py-3 text-sm sm:text-base rounded-lg font-medium flex items-center justify-center gap-2 transition-all active:scale-95 touch-manipulation ${
+                      !tips.mainTip1 || !tips.mainTip2 || sending
+                        ? "bg-gradient-to-r from-gray-600 to-gray-700 cursor-not-allowed text-gray-300"
+                        : "bg-gradient-to-r from-cyan-500 to-blue-500 hover:shadow-lg hover:shadow-cyan-500/25 text-white"
+                    }`}
+                  >
+                    {sending ? (
+                      <>
+                        <div className="animate-spin rounded-full h-3.5 w-3.5 sm:h-4 sm:w-4 border-2 border-white/30 border-t-white"></div>
+                        <span>Sending...</span>
+                      </>
                     ) : (
-                      <X className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-rose-400 flex-shrink-0" />
+                      <>
+                        <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        <span>Send Tips</span>
+                      </>
                     )}
-                    <span className="text-xs sm:text-sm md:text-base">
-                      {notification.message}
-                    </span>
-                  </div>
+                  </button>
                 </div>
-              )}
-
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <button
-                  onClick={() => !sending && setIsModalOpen(false)}
-                  className="flex-1 px-4 py-3 sm:px-5 sm:py-3 md:px-6 md:py-4 text-sm sm:text-base border border-white/20 text-white rounded-lg sm:rounded-xl hover:bg-white/5 disabled:opacity-50 transition-all touch-manipulation active:scale-95"
-                  disabled={sending}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSubmit}
-                  disabled={!tips.mainTip1 || !tips.mainTip2 || sending}
-                  className={`flex-1 px-4 py-3 sm:px-5 sm:py-3 md:px-6 md:py-4 text-sm sm:text-base rounded-lg sm:rounded-xl font-medium flex items-center justify-center gap-2 sm:gap-3 transition-all touch-manipulation active:scale-95 ${
-                    !tips.mainTip1 || !tips.mainTip2 || sending
-                      ? "bg-gradient-to-r from-gray-600 to-gray-700 cursor-not-allowed text-gray-300"
-                      : "bg-gradient-to-r from-cyan-500 to-blue-500 hover:shadow-lg sm:hover:shadow-xl hover:shadow-cyan-500/25 text-white"
-                  }`}
-                >
-                  {sending ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-white/30 border-t-white"></div>
-                      <span>Sending tips</span>
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-                      <span>Send tips to client</span>
-                    </>
-                  )}
-                </button>
               </div>
             </div>
           </div>

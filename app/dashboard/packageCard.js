@@ -19,7 +19,7 @@ export default function PackageCard({
 
   return (
     <>
-      <div className="group relative w-[85vw] max-w-[400px] min-w-[280px] xs:w-[70vw] sm:w-[45vw] md:w-[30vw] lg:w-[25vw] xl:w-[22vw] aspect-[3/4] sm:aspect-[4/3] lg:aspect-square cursor-pointer perspective-1000 h-auto min-h-[20rem] sm:min-h-[25rem] lg:h-[30rem] mx-auto m-[1rem]">
+      <div className="group relative w-[85vw] max-w-[400px] min-w-[280px] xs:w-[70vw] sm:w-[45vw] md:w-[30vw] lg:w-[25vw] xl:w-[22vw]  aspect-[3/4] sm:aspect-[4/3] lg:aspect-square cursor-pointer perspective-1000 h-auto min-h-[20rem] sm:min-h-[25rem] lg:h-[30rem] mx-auto m-[1rem]">
         <div className="relative w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.68,-0.55,0.265,1.55)] preserve-3d group-hover:rotate-y-[-180deg] group-focus:rotate-y-[-180deg] group-active:rotate-y-[-180deg]">
           <div
             className={`absolute w-full h-full backface-hidden rounded-2xl sm:rounded-3xl overflow-hidden border border-white/20 ${gradient} shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_10px_25px_rgba(0,0,0,0.25)] sm:shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_20px_40px_rgba(0,0,0,0.3)]`}

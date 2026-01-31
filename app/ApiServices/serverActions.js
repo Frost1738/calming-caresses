@@ -63,6 +63,7 @@ export async function register(formData) {
   });
 
   if (error) {
+    console.log(error);
     return {
       status: "registration failed",
       issue: error.message,
@@ -123,13 +124,13 @@ export async function collectComment(formData) {
     const title = formData.get("massageTitle");
 
     const { data, error } = await supabase
-      .from("reviews")
+      .from("review")
       .insert([
         {
           comment: comment,
           stars: Number(stars),
           name: name,
-          massageTitle: title,
+          massagetitle: title,
         },
       ])
       .select();
@@ -164,17 +165,18 @@ export async function bookMassage(
       .from("bookings")
       .insert([
         {
-          massageName: massage,
-          therapistName: therapist,
+          massage_name: massage,
+          therapistname: therapist,
           date: massageDate,
           time: massageTime,
           room: massageRoom,
-          clientName: userName,
-          clientEmail: userEmail,
+          clientname: userName,
+          clientemail: userEmail,
           duration: duration,
           price: price,
           status: "scheduled",
           completed: false,
+          created_at: new Date(),
         },
       ])
       .select();
@@ -216,22 +218,24 @@ export async function updateAppointmentStatus(appointmentId, updates) {
     };
   }
 }
+
 export async function giveTip(tipData) {
   const supabase = await createSupabaseServerClient();
   try {
     const { data, error } = await supabase
-      .from("post session tips")
+      .from("post_session_tips")
       .insert([
         {
-          firstMaintip: tipData.firstMainTip,
-          firstExplanation: tipData.firstExplanation,
-          secondMaintip: tipData.secondMainTip,
-          secondExplanation: tipData.secondExplanation,
-          bonusTip: tipData.bonusTip,
+          first_main_tip: tipData.firstMainTip,
+          first_explanation: tipData.firstExplanation,
+          second_main_tip: tipData.secondMainTip,
+          second_explanation: tipData.secondExplanation,
+          bonus_tip: tipData.bonusTip,
           client_name: tipData.clientName,
           client_email: tipData.clientEmail,
           therapist_name: tipData.therapistName,
-          serviceConsumed: tipData.serviceConsumed,
+          service_consumed: tipData.serviceConsumed,
+          booking_id: tipData.massageId,
         },
       ])
       .select();
@@ -261,7 +265,7 @@ export async function enrollTherapist(formData) {
       .from("therapists")
       .insert([
         {
-          name: formData.get("userName") || "",
+          name: formData.get("name") || "",
 
           password: formData.get("password") || "",
           experience: parseInt(formData.get("experience") || 0),
@@ -276,14 +280,15 @@ export async function enrollTherapist(formData) {
           rating: 4.0,
           reviews: 38,
           created_at: new Date().toISOString(),
-          emailAddress: formData.get("email"),
+          emailaddress: formData.get("email"),
         },
       ])
       .select();
 
-    register(formData);
+    //register(formData);
 
     if (error) {
+      console.log(error);
       throw error;
     }
 

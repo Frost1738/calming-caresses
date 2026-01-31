@@ -7,8 +7,7 @@ import { TherapyContext } from "../therapyContext";
 import { collectComment } from "../../ApiServices/serverActions";
 import toast from "react-hot-toast";
 
-export default function ExperienceForm({ massageTitle, onClose }) {
-  const { userName } = useContext(TherapyContext);
+export default function ExperienceForm({ massageTitle, onClose, name }) {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [formData, setFormData] = useState({
@@ -127,7 +126,7 @@ export default function ExperienceForm({ massageTitle, onClose }) {
                 <input
                   type="text"
                   name="name"
-                  defaultValue={userName || ""}
+                  defaultValue={name || ""}
                   className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white"
                   placeholder="Enter your name"
                 />

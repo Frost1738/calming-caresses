@@ -1,29 +1,29 @@
+import React from "react";
 import { User, Mail, Clock, MapPin } from "lucide-react";
 import {
+  getDisplayStatus,
   getStatusColor,
   getStatusIcon,
   getStatusText,
-  isTodayAppointment,
-  isPastDate,
-} from "./StatusHelpers";
-import { AppointmentActions } from "./AppointmentActions";
+} from "./statusUtils";
 
-export const DesktopAppointmentRow = ({
+export default function AppointmentRow({
   appointment,
-  onEdit,
-  onCancel,
-  onComplete,
-  onMarkNoShow,
-  isLoading,
-}) => {
-  const isPast = isPastDate(appointment.date);
-  const isToday = isTodayAppointment(appointment.date);
+  renderActionButtons,
+  isToday,
+  isPast,
+  getStatusIcon,
+  getStatusText,
+  getStatusColor,
+}) {
+  const displayStatus = getDisplayStatus(
+    appointment.status,
+    appointment.completed,
+  );
 
   return (
     <tr
-      className={`hover:bg-slate-800/20 transition-colors ${
-        isPast ? "opacity-80" : ""
-      }`}
+      className={`hover:bg-slate-800/20 transition-colors ${isPast ? "opacity-80" : ""}`}
     >
       <td className="py-4 px-6">
         <div className="flex items-center">
@@ -32,7 +32,7 @@ export const DesktopAppointmentRow = ({
           </div>
           <div>
             <div className="font-medium text-white flex items-center gap-2">
-              {appointment.clientName}
+              {appointment.clientname}
               {isToday && (
                 <span className="text-xs text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded">
                   Today
@@ -46,7 +46,7 @@ export const DesktopAppointmentRow = ({
             </div>
             <div className="text-sm text-slate-400 flex items-center gap-1">
               <Mail className="w-3 h-3" />
-              {appointment.clientEmail || "No email"}
+              {appointment.clientemail || "No email"}
             </div>
             <div className="flex items-center gap-2 mt-1">
               <div className="flex items-center gap-1 text-xs text-slate-400 bg-slate-800/40 px-2 py-1 rounded">
@@ -69,19 +69,16 @@ export const DesktopAppointmentRow = ({
           <Clock className="w-3 h-3" />
           {appointment.time.split(":").slice(0, 2).join(":")}
           <span className="text-slate-600">•</span>
-          {appointment.duration}
+          {appointment.duration} mins
         </div>
       </td>
       <td className="py-4 px-6">
-        <div className="text-white font-medium">{appointment.massageName}</div>
+        <div className="text-white font-medium">{appointment.massage_name}</div>
         <div className="text-sm text-emerald-300 mt-1">{appointment.price}</div>
       </td>
       <td className="py-4 px-6">
         <span
-          className={`inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm ${getStatusColor(
-            appointment.status,
-            appointment.completed,
-          )}`}
+          className={`inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm ${getStatusColor(appointment.status, appointment.completed)}`}
         >
           {getStatusIcon(appointment.status, appointment.completed)}
           {getStatusText(appointment.status, appointment.completed)}
@@ -89,16 +86,9 @@ export const DesktopAppointmentRow = ({
       </td>
       <td className="py-4 px-6">
         <div className="flex items-center gap-2">
-          <AppointmentActions
-            appointment={appointment}
-            isLoading={isLoading}
-            onEdit={onEdit}
-            onCancel={onCancel}
-            onComplete={onComplete}
-            onMarkNoShow={onMarkNoShow}
-          />
+          {renderActionButtons(appointment)}
         </div>
       </td>
     </tr>
   );
-};
+}

@@ -37,7 +37,27 @@ export default function StatisticsPage({ bookings }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [viewMode, setViewMode] = useState("desktop");
 
-  const bookingData = bookings || [];
+  // Normalize booking data to use consistent property names
+  const normalizedBookings = useMemo(() => {
+    if (!bookings || !Array.isArray(bookings)) return [];
+
+    return bookings.map((booking) => ({
+      ...booking,
+      // Map your actual database fields to expected field names
+      therapistName: booking.therapistname || booking.therapistName || null,
+      massageName: booking.massage_name || booking.massageName || null,
+      clientName: booking.clientname || booking.clientName || null,
+      clientEmail: booking.clientemail || booking.clientEmail || null,
+      room: booking.room || booking.room_name || null,
+      price: booking.price || booking.amount || booking.total_price || 0,
+      time: booking.time || booking.start_time || null,
+      completed: booking.completed || booking.status === "completed" || false,
+      status: booking.status || "scheduled",
+      date: booking.date || booking.created_at || null,
+    }));
+  }, [bookings]);
+
+  const bookingData = normalizedBookings || [];
 
   const stats = useMemo(() => {
     if (!bookingData || bookingData.length === 0) {
@@ -251,6 +271,16 @@ export default function StatisticsPage({ bookings }) {
         return <Monitor className="w-4 h-4" />;
     }
   };
+
+  // Debug: Check what data we have
+  useEffect(() => {
+    console.log("Original bookings:", bookings);
+    console.log("Normalized bookings:", normalizedBookings);
+    console.log(
+      "First booking fields:",
+      normalizedBookings[0] ? Object.keys(normalizedBookings[0]) : [],
+    );
+  }, [bookings, normalizedBookings]);
 
   return (
     <div className="min-h-screen bg-gray-950 text-white overflow-x-hidden">

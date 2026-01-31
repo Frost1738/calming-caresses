@@ -26,6 +26,8 @@ export default function SignInPage({ rank, role, display_name: userName }) {
       setUserName(name);
       router.push(`/authority/${rank}?name=${name}`);
     } else {
+      console.log(role == rank);
+      console.log(userName == name);
       console.log("Authentication failed");
       toast.error("check your credentials");
     }

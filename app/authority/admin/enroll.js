@@ -105,7 +105,7 @@ export default function EnrollmentPage() {
       newErrors.techniques = "Select at least one technique";
     if (!formData.hours) newErrors.hours = "Hours are required";
     if (!formData.level) newErrors.level = "Level is required";
-    if (!formData.price) newErrors.price = "Price is required";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };

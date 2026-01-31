@@ -36,6 +36,25 @@ export default function TopPerformersPage({ bookings }) {
   const [activeTab, setActiveTab] = useState("therapists");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Normalize booking data to use consistent property names
+  const normalizedBookings = useMemo(() => {
+    if (!bookings || !Array.isArray(bookings)) return [];
+
+    return bookings.map((booking) => ({
+      ...booking,
+      // Map your actual database fields to expected field names
+      therapistName: booking.therapistname || booking.therapistName || null,
+      massageName: booking.massage_name || booking.massageName || null,
+      clientName: booking.clientname || booking.clientName || null,
+      clientEmail: booking.clientemail || booking.clientEmail || null,
+      // Ensure date is properly formatted
+      date: booking.date || booking.created_at || null,
+      // Map status if needed
+      status: booking.status || "completed", // Assuming all are completed
+      completed: booking.completed || true, // Assuming all are completed
+    }));
+  }, [bookings]);
+
   // Safe name formatter with null check
   const formatName = (name) => {
     if (!name || name === "null" || name === "undefined") {
@@ -49,8 +68,8 @@ export default function TopPerformersPage({ bookings }) {
 
   // Filter bookings by time range
   const filteredBookings = useMemo(() => {
-    if (!bookings || !Array.isArray(bookings)) return [];
-    if (timeRange === "all") return bookings;
+    if (!normalizedBookings || !Array.isArray(normalizedBookings)) return [];
+    if (timeRange === "all") return normalizedBookings;
 
     const now = new Date();
     let daysBack = 30;
@@ -60,7 +79,7 @@ export default function TopPerformersPage({ bookings }) {
 
     const cutoffDate = new Date(now.setDate(now.getDate() - daysBack));
 
-    return bookings.filter((booking) => {
+    return normalizedBookings.filter((booking) => {
       if (!booking.date) return false;
       try {
         const bookingDate = new Date(booking.date);
@@ -69,7 +88,7 @@ export default function TopPerformersPage({ bookings }) {
         return false;
       }
     });
-  }, [bookings, timeRange]);
+  }, [normalizedBookings, timeRange]);
 
   // Calculate therapist rankings (0-100 points)
   const therapistRankings = useMemo(() => {
@@ -350,6 +369,15 @@ export default function TopPerformersPage({ bookings }) {
         totalMassageTypes: new Set(
           therapistRankings.flatMap((t) => Array.from(t.massageTypes)),
         ).size,
+        averageScore:
+          therapistRankings.length > 0
+            ? Math.round(
+                therapistRankings.reduce(
+                  (sum, t) => sum + t.performanceScore,
+                  0,
+                ) / therapistRankings.length,
+              )
+            : 0,
       };
     } else {
       return {
@@ -362,6 +390,13 @@ export default function TopPerformersPage({ bookings }) {
             Array.from(c.favoriteTherapists.keys()),
           ),
         ).size,
+        averageScore:
+          clientRankings.length > 0
+            ? Math.round(
+                clientRankings.reduce((sum, c) => sum + c.loyaltyScore, 0) /
+                  clientRankings.length,
+              )
+            : 0,
       };
     }
   }, [activeTab, therapistRankings, clientRankings]);
@@ -377,7 +412,7 @@ export default function TopPerformersPage({ bookings }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 p-2 xs:p-3 sm:p-4 md:p-6 lg:p-8">
       <MobileHeader
-        bookings={bookings}
+        bookings={normalizedBookings}
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
         timeRange={timeRange}
@@ -390,7 +425,7 @@ export default function TopPerformersPage({ bookings }) {
       />
 
       <DesktopHeader
-        bookings={bookings}
+        bookings={normalizedBookings}
         timeRange={timeRange}
         setTimeRange={setTimeRange}
         activeTab={activeTab}

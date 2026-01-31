@@ -40,7 +40,7 @@ const marginY = 1;
 
 export default function Experience({ message, stars, name, massageTitle }) {
   return (
-    <li className={`min-h-[5rem]  mb-4 h-auto w-[99%]  relative xxs:m-[5px]`}>
+    <li className={`min-h-[5rem]  mb-2 h-auto w-[99%]  relative xxs:m-[5px]`}>
       <div className="min-h-[5rem] h-auto w-[100%] bg-[#FFFBFF] flex justify-start items-center pl-[2px] rounded-4xl">
         <div className="h-[4rem] w-[4rem]   bg-[#362417] text-amber-100  rounded-4xl flex justify-center items-center ">
           {getInitials(name)}

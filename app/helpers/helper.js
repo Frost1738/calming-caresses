@@ -82,3 +82,23 @@ export const filterOutPastAppointments = (appointmentsList) => {
     return appointmentDate >= today;
   });
 };
+
+export function findNonMatchingIds(array1, array2) {
+  // Validate inputs
+
+  // Create a Set of bookingIds from array2 for efficient lookup
+  const bookingIdsSet = new Set(
+    array2
+      .filter((item) => item && typeof item === "object")
+      .map((item) => item.booking_id)
+      .filter((id) => id !== undefined),
+  );
+
+  // Find ids from array1 that DO NOT exist in array2's bookingIds
+  const nonMatchingIds = array1
+    .filter((item) => item && typeof item === "object")
+    .map((item) => item.id)
+    .filter((id) => id !== undefined && !bookingIdsSet.has(id));
+
+  return nonMatchingIds;
+}

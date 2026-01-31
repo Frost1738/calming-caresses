@@ -15,6 +15,7 @@ export default function AdvertCard({
   title = "Premium Collection",
   description = "Discover our exclusive range...",
   images = sampleImages,
+  name,
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -58,7 +59,7 @@ export default function AdvertCard({
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1,
     );
     resetTimer();
   };
@@ -74,6 +75,7 @@ export default function AdvertCard({
         <ExperienceForm
           massageTitle={title}
           onClose={() => setCardFormOpen(false)}
+          name={name}
         />
       )}
 

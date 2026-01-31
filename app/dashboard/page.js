@@ -29,6 +29,7 @@ export default async function Page() {
   const display_name = sessionData?.session?.user?.user_metadata?.display_name;
   const email = sessionData?.session?.user?.user_metadata?.email;
   const session = await getServerSession(authOptions);
+  const me = sessionData;
 
   const userName = display_name || session.user?.name;
   const usersEmail = email || session.user?.email;
@@ -66,14 +67,13 @@ export default async function Page() {
             </span>
           ) : null}
           {appointments && appointments.length > 0 ? (
-            appointments.map((appointment, index) => (
+            appointments.map((appointment, index, array) => (
               <AppointmentCard
                 key={appointment.id || index}
-                date={appointment.date}
-                time={appointment.time}
-                session={appointment.massageName}
-                therapist={appointment.therapistName}
-                room={appointment.room}
+                date={appointment.date || ""}
+                time={appointment.time || ""}
+                session={appointment.massage_name || ""}
+                therapist={appointment.therapistname || ""}
               />
             ))
           ) : (
@@ -90,7 +90,7 @@ export default async function Page() {
         <AfterCare postSessionTips={OnlyTips} />
       </div>
 
-      <div className="h-auto min-h-[100vh] w-[100%] bg-gradient-to-br bg-[radial-gradient(circle_at_20%_30%,rgba(251,191,36,0.2)_0%,transparent_50%),radial-gradient(circle_at_60%_50%,rgba(34,197,94,0.15)_0%,transparent_50%),radial-gradient(circle_at_80%_70%,rgba(100,116,139,0.3)_0%,transparent_50%),linear-gradient(135deg,#f8fafc_0%,#f1f5f9_50%,#e2e8f0_100%)]  flex justify-center max-md:flex-col items-center ">
+      <div className="h-auto p-2 w-[100%] bg-gradient-to-br bg-[radial-gradient(circle_at_20%_30%,rgba(251,191,36,0.2)_0%,transparent_50%),radial-gradient(circle_at_60%_50%,rgba(34,197,94,0.15)_0%,transparent_50%),radial-gradient(circle_at_80%_70%,rgba(100,116,139,0.3)_0%,transparent_50%),linear-gradient(135deg,#f8fafc_0%,#f1f5f9_50%,#e2e8f0_100%)]  flex justify-center max-md:flex-col items-center overflow-hidden">
         <PackageCard
           benefit1={"free 1 hour massage once a month"}
           benefit2={"a free snack at request"}
