@@ -23,18 +23,47 @@ export default function RoomSelection({ massageRooms }) {
 
   const { setRoomName, setPrice } = useContext(CartContext);
 
+  // CRITICAL FIX: Ensure massageRooms is always an array
+  const safeRooms = Array.isArray(massageRooms) ? massageRooms : [];
+
   const handleSelectRoom = (room) => {
     setSelectedRoom(room);
-    setRoomName(room.name);
-    setPrice((price) => price + room.price);
+    if (room?.name) setRoomName(room.name);
+    if (room?.price) setPrice((price) => price + room.price);
   };
 
   const handleContinue = () => {
-    if (selectedRoom) {
+    if (selectedRoom?.name) {
       router.push("/booking/confirmation");
       setRoomName(selectedRoom.name);
     }
   };
+
+  // If no rooms, show empty state
+  if (safeRooms.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="w-32 h-32 rounded-full bg-gradient-to-r from-gray-700 to-gray-800 flex items-center justify-center mx-auto mb-6">
+            <span className="text-5xl">🏠</span>
+          </div>
+          <h1 className="text-2xl font-bold text-white mb-4">
+            No Rooms Available
+          </h1>
+          <p className="text-gray-300 mb-8">
+            We&apos;re currently preparing our massage rooms. Please check back
+            soon.
+          </p>
+          <button
+            onClick={() => router.back()}
+            className="px-6 py-3 bg-gray-800 text-gray-300 rounded-xl hover:bg-gray-700 transition-colors"
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4 md:p-8">
@@ -48,130 +77,160 @@ export default function RoomSelection({ massageRooms }) {
           <h1 className="max-xs:text-2xl xs:text-2xl md:text-3xl font-normal text-white font-[family-name:var(--font-dancing-script)] mb-4">
             Choose Your Sanctuary
           </h1>
-          <p className="text-gray-300 text-sm  max-w-3xl mx-auto">
+          <p className="text-gray-300 text-sm max-w-3xl mx-auto">
             Each room is uniquely designed to enhance your massage experience.
             Select an ambiance that speaks to your soul.
           </p>
         </motion.div>
 
-        {/* Room Grid */}
+        {/* Room Grid - FIXED: Use safeRooms instead of massageRooms */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           <AnimatePresence>
-            {massageRooms.map((room, index) => (
-              <motion.div
-                key={room.id}
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -8, scale: 1.02 }}
-                onMouseEnter={() => setHoveredRoom(room.id)}
-                onMouseLeave={() => setHoveredRoom(null)}
-                className={`relative cursor-pointer transition-all duration-300 ${
-                  selectedRoom?.id === room.id
-                    ? "ring-4 ring-blue-500 ring-opacity-50"
-                    : ""
-                }`}
-                onClick={() => handleSelectRoom(room)}
-              >
-                <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl overflow-hidden border border-gray-700 h-full">
-                  {/* Room Image/Header */}
-                  <div className="h-48 relative overflow-hidden">
-                    {/* Background Image with overlay */}
-                    <div
-                      className="absolute inset-0 bg-cover bg-center"
-                      style={{ backgroundImage: `url('${room.image}')` }}
-                    >
+            {safeRooms.map((room, index) => {
+              // Ensure room has all required properties
+              const safeRoom = {
+                id: room.id || `room-${index}`,
+                name: room.name || `Room ${index + 1}`,
+                ambiance: room.ambiance || "Serene",
+                description: room.description || "A relaxing massage room",
+                price: room.price || 0,
+                image:
+                  room.image ||
+                  `https://picsum.photos/seed/room${index}/400/300`,
+                popularity: room.popularity || 85,
+                color: room.color || "from-blue-900/50 to-indigo-900/50",
+                features: Array.isArray(room.features)
+                  ? room.features
+                  : [
+                      { icon: "💆", label: "Massage Table" },
+                      { icon: "🎵", label: "Ambient Music" },
+                      { icon: "🕯️", label: "Aromatherapy" },
+                      { icon: "🌡️", label: "Climate Control" },
+                    ],
+              };
+
+              return (
+                <motion.div
+                  key={safeRoom.id}
+                  initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  onMouseEnter={() => setHoveredRoom(safeRoom.id)}
+                  onMouseLeave={() => setHoveredRoom(null)}
+                  className={`relative cursor-pointer transition-all duration-300 ${
+                    selectedRoom?.id === safeRoom.id
+                      ? "ring-4 ring-blue-500 ring-opacity-50"
+                      : ""
+                  }`}
+                  onClick={() => handleSelectRoom(safeRoom)}
+                >
+                  <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl overflow-hidden border border-gray-700 h-full">
+                    {/* Room Image/Header */}
+                    <div className="h-48 relative overflow-hidden">
+                      {/* Background Image with overlay */}
                       <div
-                        className={`absolute inset-0 bg-gradient-to-r ${room.color} opacity-70`}
-                      ></div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                    </div>
+                        className="absolute inset-0 bg-cover bg-center"
+                        style={{ backgroundImage: `url('${safeRoom.image}')` }}
+                      >
+                        <div
+                          className={`absolute inset-0 bg-gradient-to-r ${safeRoom.color} opacity-70`}
+                        ></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                      </div>
 
-                    {/* Room Name Overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                      <h3 className="text-xl font-bold text-white">
-                        {room.name}
-                      </h3>
-                      <p className="text-gray-300 text-sm">{room.ambiance}</p>
-                    </div>
+                      {/* Room Name Overlay */}
+                      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                        <h3 className="text-xl font-bold text-white">
+                          {safeRoom.name}
+                        </h3>
+                        <p className="text-gray-300 text-sm">
+                          {safeRoom.ambiance}
+                        </p>
+                      </div>
 
-                    {/* Popularity Badge */}
-                    <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-sm px-3 py-1 rounded-full">
-                      <div className="flex items-center gap-1 text-white">
-                        <FiStar className="text-yellow-400" />
-                        <span className="font-bold">{room.popularity}%</span>
+                      {/* Popularity Badge */}
+                      <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-sm px-3 py-1 rounded-full">
+                        <div className="flex items-center gap-1 text-white">
+                          <FiStar className="text-yellow-400" />
+                          <span className="font-bold">
+                            {safeRoom.popularity}%
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Selection Indicator */}
+                      {selectedRoom?.id === safeRoom.id && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="absolute top-4 left-4 w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center z-20"
+                        >
+                          <FiCheck className="text-white text-xl" />
+                        </motion.div>
+                      )}
+
+                      {/* Price Tag */}
+                      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-black/70 backdrop-blur-sm px-3 py-1 rounded-full">
+                        <span className="text-white font-bold text-sm">
+                          +${safeRoom.price}
+                        </span>
                       </div>
                     </div>
 
-                    {/* Selection Indicator */}
-                    {selectedRoom?.id === room.id && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute top-4 left-4 w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center z-20"
-                      >
-                        <FiCheck className="text-white text-xl" />
-                      </motion.div>
-                    )}
+                    {/* Room Content */}
+                    <div className="p-6">
+                      <p className="text-gray-300 text-sm mb-4">
+                        {safeRoom.description}
+                      </p>
 
-                    {/* Price Tag */}
-                    <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-black/70 backdrop-blur-sm px-3 py-1 rounded-full">
-                      <span className="text-white font-bold text-sm">
-                        +${room.price}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Room Content */}
-                  <div className="p-6">
-                    <p className="text-gray-300 text-sm mb-4">
-                      {room.description}
-                    </p>
-
-                    {/* Features */}
-                    <div className="grid grid-cols-2 gap-2 mb-4">
-                      {room.features.slice(0, 2).map((feature, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-center gap-2 text-sm text-gray-400"
-                        >
-                          <span className="text-lg">{feature.icon}</span>
-                          <span>{feature.label}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Hover Effect Content */}
-                    <AnimatePresence>
-                      {hoveredRoom === room.id && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="overflow-hidden"
-                        >
-                          <div className="pt-4 border-t border-gray-700">
-                            <div className="grid grid-cols-2 gap-2">
-                              {room.features.slice(2).map((feature, idx) => (
-                                <div
-                                  key={idx}
-                                  className="flex items-center gap-2 text-sm text-gray-400"
-                                >
-                                  <span className="text-lg">
-                                    {feature.icon}
-                                  </span>
-                                  <span>{feature.label}</span>
-                                </div>
-                              ))}
-                            </div>
+                      {/* Features */}
+                      <div className="grid grid-cols-2 gap-2 mb-4">
+                        {safeRoom.features.slice(0, 2).map((feature, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center gap-2 text-sm text-gray-400"
+                          >
+                            <span className="text-lg">{feature.icon}</span>
+                            <span>{feature.label}</span>
                           </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                        ))}
+                      </div>
+
+                      {/* Hover Effect Content */}
+                      <AnimatePresence>
+                        {hoveredRoom === safeRoom.id && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="pt-4 border-t border-gray-700">
+                              <div className="grid grid-cols-2 gap-2">
+                                {safeRoom.features
+                                  .slice(2)
+                                  .map((feature, idx) => (
+                                    <div
+                                      key={idx}
+                                      className="flex items-center gap-2 text-sm text-gray-400"
+                                    >
+                                      <span className="text-lg">
+                                        {feature.icon}
+                                      </span>
+                                      <span>{feature.label}</span>
+                                    </div>
+                                  ))}
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         </div>
 
