@@ -8,9 +8,7 @@ export default async function Page() {
 
   return (
     <div className="h-auto w-auto">
-      <Suspense fallback={<Loader />}>
-        <RoomSelection massageRooms={massageRooms} />
-      </Suspense>
+      <RoomSelection massageRooms={massageRooms} />
     </div>
   );
 }
