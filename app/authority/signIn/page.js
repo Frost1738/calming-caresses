@@ -14,7 +14,7 @@ export default async function Page({ searchParams }) {
     sessionData?.session?.user?.user_metadata?.display_name || "guest";
 
   const profile = await getRole(sessionData?.session?.user?.id);
-  const [{ role }] = profile;
+  const [{ role }] = profile || [{ role: "guest" }];
 
   return (
     <div>

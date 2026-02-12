@@ -5,7 +5,7 @@ export const SignInContext = createContext();
 
 export default function SignInProvider({ children }) {
   const [userName, setUserName] = useState("mimi");
-  console.log("mini bhyytryfyufu jjjj", userName);
+
   return (
     <SignInContext.Provider value={{ userName, setUserName }}>
       {children}
