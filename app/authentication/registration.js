@@ -258,7 +258,7 @@ export default function Registration() {
               </div>
 
               {/* Social Login */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+              <div className="flex justify-center items-center">
                 <button
                   type="button"
                   onClick={() => signIn("google")}
@@ -267,24 +267,6 @@ export default function Registration() {
                   <FaGoogle className="w-5 h-5 md:w-6 md:h-6 mr-2 sm:mr-3 text-white group-hover:text-rose-400" />
                   <span className="text-white text-sm sm:text-base md:text-lg">
                     Google
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  className="flex items-center justify-center px-4 py-3 md:py-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300 group"
-                >
-                  <FaFacebook className="w-5 h-5 md:w-6 md:h-6 mr-2 sm:mr-3 text-white group-hover:text-blue-500" />
-                  <span className="text-white text-sm sm:text-base md:text-lg">
-                    Facebook
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  className="flex items-center justify-center px-4 py-3 md:py-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300 group"
-                >
-                  <FaGithub className="w-5 h-5 md:w-6 md:h-6 mr-2 sm:mr-3 text-white group-hover:text-gray-800" />
-                  <span className="text-white text-sm sm:text-base md:text-lg">
-                    GitHub
                   </span>
                 </button>
               </div>
