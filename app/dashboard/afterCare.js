@@ -18,7 +18,7 @@ export default function AfterCare({ postSessionTips }) {
   // lg:h-[90%] xl:h-[80%]  h-[80%] max-sm:h-[80%] max-xs:h-[70%]
   return (
     <div className="w-[90%] h-auto  bg-amber-200 rounded-md flex">
-      <div className="h-auto rounded-md w-[55%] [clip-path:polygon(0%_0%,100%_0%,80%_100%,0%_100%)] bg-cover bg-[url(https://edgmylxnlegbdhhbpcvm.supabase.co/storage/v1/object/sign/background-mini--002/g7FysI3l3M6n9h1nLCba--0--4seq2.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zMDRhZjUwMi04NTkxLTQwNWYtOWQ3OC0yYWM0NWY1ZDllNDEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLW1pbmktLTAwMi9nN0Z5c0kzbDNNNm45aDFuTENiYS0tMC0tNHNlcTIuanBnIiwiaWF0IjoxNzY1MjExNDk4LCJleHAiOjE3OTY3NDc0OTh9.-4Y9n1t7vwzOGHn2bU8sUzg-JVsmUUZhXng17-jxQu8)] bg-blue-950"></div>
+      <div className="h-auto rounded-md w-[55%] [clip-path:polygon(0%_0%,100%_0%,80%_100%,0%_100%)] bg-cover bg-[url(https://blwoiwbplzhoyviciovw.supabase.co/storage/v1/object/sign/background-mini--002/g7FysI3l3M6n9h1nLCba--0--4seq2.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wZGQ5MjJkNC0wYzRlLTRiMTAtYTUyYy1kMzRhNTBiNWU2ZTMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLW1pbmktLTAwMi9nN0Z5c0kzbDNNNm45aDFuTENiYS0tMC0tNHNlcTIuanBnIiwiaWF0IjoxNzcwODgxODk5LCJleHAiOjE4MDI0MTc4OTl9.DCI4tusE3DMD_1FP9RavGng6EMNZpk5dQF2EzXz9hZw)] bg-blue-950"></div>
       <div className="h-[100%]  w-[45%] ">
         <h1 className="font-semibold md:text-3xl md:mb-[1rem] mt-[18px] mb-[7px] max-xxs:text-xs text-[#172A3A]">
           🧘post session tip

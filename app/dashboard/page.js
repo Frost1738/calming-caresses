@@ -51,7 +51,7 @@ export default async function Page() {
 
   return (
     <div className="min-h-[100vh] h-auto bg-amber-400  overflow-y-auto overflow-x-hidden">
-      <div className="w-[100%] h-[5rem] xl:h-[7rem] bg-left  max-xl:bg-cover flex justify-center items-center  bg-[url(https://edgmylxnlegbdhhbpcvm.supabase.co/storage/v1/object/sign/background--mini--003/FgTO3a6QvenARnKKYjWD--0--5dfww.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zMDRhZjUwMi04NTkxLTQwNWYtOWQ3OC0yYWM0NWY1ZDllNDEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS1taW5pLS0wMDMvRmdUTzNhNlF2ZW5BUm5LS1lqV0QtLTAtLTVkZnd3LmpwZyIsImlhdCI6MTc2NTI2ODMzMSwiZXhwIjoxNzk2ODA0MzMxfQ.hF7V5fydiAis-Q3ORWKXmeXie0X9FAzM2gDD1VMmxOY)]">
+      <div className="w-[100%] h-[5rem] xl:h-[7rem] bg-left  max-xl:bg-cover flex justify-center items-center  bg-[url(https://blwoiwbplzhoyviciovw.supabase.co/storage/v1/object/sign/background--mini--001/FgTO3a6QvenARnKKYjWD--0--5dfww.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wZGQ5MjJkNC0wYzRlLTRiMTAtYTUyYy1kMzRhNTBiNWU2ZTMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS1taW5pLS0wMDEvRmdUTzNhNlF2ZW5BUm5LS1lqV0QtLTAtLTVkZnd3LmpwZyIsImlhdCI6MTc3MDg4MDYxNywiZXhwIjoxODAyNDE2NjE3fQ.L3CEAQTdBaxPHtEjVZM8YrKC02GPpehg9Bcb0SJl73k)]">
         <h2 className="text-blue-300 xs:text-xl text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
           Good {timeGreeting}
         </h2>
@@ -99,7 +99,7 @@ export default async function Page() {
           benefit5={"Relaxation Lounge Access"}
           price={12}
           imageUrl={
-            "https://edgmylxnlegbdhhbpcvm.supabase.co/storage/v1/object/sign/background--advert-001/WRVuSu6LlhwXjD7J4zKx--0--di7jr.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zMDRhZjUwMi04NTkxLTQwNWYtOWQ3OC0yYWM0NWY1ZDllNDEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS1hZHZlcnQtMDAxL1dSVnVTdTZMbGh3WGpEN0o0ekt4LS0wLS1kaTdqci5qcGciLCJpYXQiOjE3NjUyNjQ3NzgsImV4cCI6MTc5NjgwMDc3OH0._A1H0XfWtmZdfoN6_VK5fT-E2GQVgQ4d9UNl2Y5Zyng"
+            "https://blwoiwbplzhoyviciovw.supabase.co/storage/v1/object/sign/background--advert-001/WRVuSu6LlhwXjD7J4zKx--0--di7jr.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wZGQ5MjJkNC0wYzRlLTRiMTAtYTUyYy1kMzRhNTBiNWU2ZTMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS1hZHZlcnQtMDAxL1dSVnVTdTZMbGh3WGpEN0o0ekt4LS0wLS1kaTdqci5qcGciLCJpYXQiOjE3NzA4ODE5OTcsImV4cCI6MTgwMjQxNzk5N30.auFgGlv7zfbP9CFwYCRnnCGvpf7dpJjjd1JFfQOXvSg"
           }
           from={"emerald-500"}
           via={"green-600"}
@@ -114,7 +114,7 @@ export default async function Page() {
           benefit5={"Free Cupping Sessions"}
           price={20}
           imageUrl={
-            "https://edgmylxnlegbdhhbpcvm.supabase.co/storage/v1/object/sign/background--advert-005/lucid-origin_One_entire_wall_is_a_water_feature_-_smooth_river_stones_with_water_trickling_do-0.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zMDRhZjUwMi04NTkxLTQwNWYtOWQ3OC0yYWM0NWY1ZDllNDEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS1hZHZlcnQtMDA1L2x1Y2lkLW9yaWdpbl9PbmVfZW50aXJlX3dhbGxfaXNfYV93YXRlcl9mZWF0dXJlXy1fc21vb3RoX3JpdmVyX3N0b25lc193aXRoX3dhdGVyX3RyaWNrbGluZ19kby0wLmpwZyIsImlhdCI6MTc2Nzg4MzY3MywiZXhwIjoxNzk5NDE5NjczfQ.--z3aTe_rTEdVWC1rCaG2MpgvAZnsT2UZFkXLINAbYE"
+            "https://blwoiwbplzhoyviciovw.supabase.co/storage/v1/object/sign/background--advert-002/image_1765624187319.webp_image.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wZGQ5MjJkNC0wYzRlLTRiMTAtYTUyYy1kMzRhNTBiNWU2ZTMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS1hZHZlcnQtMDAyL2ltYWdlXzE3NjU2MjQxODczMTkud2VicF9pbWFnZS5wbmciLCJpYXQiOjE3NzA4ODIzODUsImV4cCI6MTgwMjQxODM4NX0.A8vpi054V0ZT5HnE27mV4k61KbPrhXsGgq6LX-kjLKE"
           }
           from={"slate-900"}
           via={"gray-600"}
@@ -129,7 +129,7 @@ export default async function Page() {
           benefit5={"Luxury Wellness Retreat Invitation"}
           price={30}
           imageUrl={
-            "https://edgmylxnlegbdhhbpcvm.supabase.co/storage/v1/object/sign/background--advert-004/lucid-origin_An_otherworldly_massage_sanctuary_floating_among_clouds_at_sunset._A_single_anci-0.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zMDRhZjUwMi04NTkxLTQwNWYtOWQ3OC0yYWM0NWY1ZDllNDEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS1hZHZlcnQtMDA0L2x1Y2lkLW9yaWdpbl9Bbl9vdGhlcndvcmxkbHlfbWFzc2FnZV9zYW5jdHVhcnlfZmxvYXRpbmdfYW1vbmdfY2xvdWRzX2F0X3N1bnNldC5fQV9zaW5nbGVfYW5jaS0wLmpwZyIsImlhdCI6MTc2Nzg4NDk2OSwiZXhwIjoxNzk5NDIwOTY5fQ.kIRMiVNm4z2sAcM9WlvDmeITDYVz5BGpkvXupsX9Sh8"
+            "https://blwoiwbplzhoyviciovw.supabase.co/storage/v1/object/sign/background--advert-003/lucid-origin_An_otherworldly_massage_sanctuary_floating_among_clouds_at_sunset._A_single_anci-0.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wZGQ5MjJkNC0wYzRlLTRiMTAtYTUyYy1kMzRhNTBiNWU2ZTMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS1hZHZlcnQtMDAzL2x1Y2lkLW9yaWdpbl9Bbl9vdGhlcndvcmxkbHlfbWFzc2FnZV9zYW5jdHVhcnlfZmxvYXRpbmdfYW1vbmdfY2xvdWRzX2F0X3N1bnNldC5fQV9zaW5nbGVfYW5jaS0wLmpwZyIsImlhdCI6MTc3MDg4MjQ1NiwiZXhwIjoxODAyNDE4NDU2fQ.RJdRd_9dBPjDRZ0y6tH5fq8FM2mPx0V5Oy6OXOBl7x8"
           }
           from={"gray-450"}
           via={"gray-300"}

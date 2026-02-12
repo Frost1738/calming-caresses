@@ -22,5 +22,7 @@ export default async function Page({ searchParams }) {
         />
       </div>
     );
+  } else {
+    return <h1>you don&apos;t have clearance</h1>;
   }
 }

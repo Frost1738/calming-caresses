@@ -17,5 +17,7 @@ export default async function Page() {
         <EnrollmentPage />
       </div>
     );
+  } else {
+    return <h1>you don&apos;t have clearance</h1>;
   }
 }
