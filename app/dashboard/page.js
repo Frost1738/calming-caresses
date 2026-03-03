@@ -20,6 +20,7 @@ import {
 } from "../helpers/helper";
 import { markNoShow } from "../ApiServices/serverActions";
 import { createSupabaseServerClient } from "../supabase/server";
+import Image from "next/image";
 
 export default async function Page() {
   unstable_noStore();
@@ -50,9 +51,22 @@ export default async function Page() {
   const shouldUseSlider = appointments && appointments.length > 3;
 
   return (
-    <div className="min-h-[100vh] h-auto bg-amber-400  overflow-y-auto overflow-x-hidden">
-      <div className="w-[100%] h-[5rem] xl:h-[7rem] bg-left  max-xl:bg-cover flex justify-center items-center  bg-[url(https://blwoiwbplzhoyviciovw.supabase.co/storage/v1/object/sign/background--mini--001/FgTO3a6QvenARnKKYjWD--0--5dfww.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wZGQ5MjJkNC0wYzRlLTRiMTAtYTUyYy1kMzRhNTBiNWU2ZTMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS1taW5pLS0wMDEvRmdUTzNhNlF2ZW5BUm5LS1lqV0QtLTAtLTVkZnd3LmpwZyIsImlhdCI6MTc3MDg4MDYxNywiZXhwIjoxODAyNDE2NjE3fQ.L3CEAQTdBaxPHtEjVZM8YrKC02GPpehg9Bcb0SJl73k)]">
-        <h2 className="text-blue-300 xs:text-xl text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
+    <div className="min-h-[100vh] h-auto bg-amber-400 overflow-y-auto overflow-x-hidden">
+      {/* Header - Fixed */}
+      <div className="relative w-full h-[5rem] xl:h-[7rem] flex justify-center items-center overflow-hidden">
+        {/* Image with fill - now constrained to parent */}
+        <Image
+          alt="galaxy"
+          fill
+          className="object-cover object-left"
+          src="https://blwoiwbplzhoyviciovw.supabase.co/storage/v1/object/sign/background--mini--001/FgTO3a6QvenARnKKYjWD--0--5dfww.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wZGQ5MjJkNC0wYzRlLTRiMTAtYTUyYy1kMzRhNTBiNWU2ZTMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS1taW5pLS0wMDEvRmdUTzNhNlF2ZW5BUm5LS1lqV0QtLTAtLTVkZnd3LmpwZyIsImlhdCI6MTc3MDg4MDYxNywiZXhwIjoxODAyNDE2NjE3fQ.L3CEAQTdBaxPHtEjVZM8YrKC02GPpehg9Bcb0SJl73k"
+          priority
+        />
+
+        {/* Optional overlay for better text contrast */}
+        <div className="absolute inset-0 bg-black/20 z-[1]" />
+
+        <h2 className="relative z-10 text-blue-300 xs:text-xl text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl px-4 text-center">
           Good {timeGreeting}
         </h2>
       </div>
@@ -60,7 +74,7 @@ export default async function Page() {
       {shouldUseSlider ? (
         <AppointmentsSlider appointments={appointments} userName={userName} />
       ) : (
-        <div className="h-auto relative max-xxs:pt-15 xxs:pt-16 max-xxs:pb-8 xxs:pt-8 xxs:pb-15 xl:pt-30 xs:pt-16 sm:pt-14 lg:pt-25  bg-[radial-gradient(ellipse_at_center,_rgba(255,203,71,1)_0%,_rgba(168,126,29,1)_35%,_rgba(39,41,50,1)_100%)] flex flex-col sm:flex-row  justify-center items-center  md:min-h-[80vh]">
+        <div className="h-auto relative max-xxs:pt-15 xxs:pt-16 max-xxs:pb-8 xxs:pt-8 xxs:pb-15 xl:pt-30 xs:pt-16 sm:pt-14 lg:pt-25 bg-[radial-gradient(ellipse_at_center,_rgba(255,203,71,1)_0%,_rgba(168,126,29,1)_35%,_rgba(39,41,50,1)_100%)] flex flex-col sm:flex-row justify-center items-center md:min-h-[80vh]">
           {appointments.length > 0 ? (
             <span className="font-semibold absolute text-[#ABA194] top-1 xxs:top-4 xs:top-5 sm:top-4 xl:top-10 lg:top-7 max-xxs:top-5 font-[family-name:var(--font-quicksand))]">
               YOU ARE SCHEDULED FOR 🗓️
@@ -86,11 +100,11 @@ export default async function Page() {
         </div>
       )}
 
-      <div className="h-[90vh]  bg-gradient-to-tl from-stone-900 via-amber-900 to-yellow-80 flex justify-center items-center">
+      <div className="h-[90vh] bg-gradient-to-tl from-stone-900 via-amber-900 to-yellow-80 flex justify-center items-center">
         <AfterCare postSessionTips={OnlyTips} />
       </div>
 
-      <div className="h-auto p-2 w-[100%] bg-gradient-to-br bg-[radial-gradient(circle_at_20%_30%,rgba(251,191,36,0.2)_0%,transparent_50%),radial-gradient(circle_at_60%_50%,rgba(34,197,94,0.15)_0%,transparent_50%),radial-gradient(circle_at_80%_70%,rgba(100,116,139,0.3)_0%,transparent_50%),linear-gradient(135deg,#f8fafc_0%,#f1f5f9_50%,#e2e8f0_100%)]  flex justify-center max-md:flex-col items-center overflow-hidden">
+      <div className="h-auto p-2 w-[100%] bg-gradient-to-br bg-[radial-gradient(circle_at_20%_30%,rgba(251,191,36,0.2)_0%,transparent_50%),radial-gradient(circle_at_60%_50%,rgba(34,197,94,0.15)_0%,transparent_50%),radial-gradient(circle_at_80%_70%,rgba(100,116,139,0.3)_0%,transparent_50%),linear-gradient(135deg,#f8fafc_0%,#f1f5f9_50%,#e2e8f0_100%)] flex justify-center max-md:flex-col items-center overflow-hidden">
         <PackageCard
           benefit1={"free 1 hour massage once a month"}
           benefit2={"a free snack at request"}

@@ -13,6 +13,23 @@ export const metadata = {
 export default function Page() {
   return (
     <div className="h-screen w-full relative overflow-x-hidden  text-white flex items-center justify-between bg-no-repeat bg-left bg-cover md:bg-[url('https://blwoiwbplzhoyviciovw.supabase.co/storage/v1/object/sign/background--001--big/upscalemedia-transformed%20(1).jpeg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wZGQ5MjJkNC0wYzRlLTRiMTAtYTUyYy1kMzRhNTBiNWU2ZTMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS0wMDEtLWJpZy91cHNjYWxlbWVkaWEtdHJhbnNmb3JtZWQgKDEpLmpwZWciLCJpYXQiOjE3NzA4ODAxNTYsImV4cCI6MTgwMjQxNjE1Nn0.L8xYz_kX0vvFoZwGvsC_0oqLKuguNpUBmSwOxOAksik')] bg-[url('https://blwoiwbplzhoyviciovw.supabase.co/storage/v1/object/sign/background--001/0u3X8DDpJ9p1zIcckeqQ--0--65bi5.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wZGQ5MjJkNC0wYzRlLTRiMTAtYTUyYy1kMzRhNTBiNWU2ZTMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS0wMDEvMHUzWDhERHBKOXAxekljY2tlcVEtLTAtLTY1Ymk1LmpwZyIsImlhdCI6MTc3MDg3OTQ2MCwiZXhwIjoxODAyNDE1NDYwfQ.NU6Q8oBoSMuTMR0eqjH6m1VusmvMblwYq7Cck47xEF0')]">
+      <picture>
+        <source
+          media="(min-width: 768px)"
+          srcSet="https://blwoiwbplzhoyviciovw.supabase.co/storage/v1/object/sign/background--001--big/upscalemedia-transformed%20(1).jpeg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wZGQ5MjJkNC0wYzRlLTRiMTAtYTUyYy1kMzRhNTBiNWU2ZTMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS0wMDEtLWJpZy91cHNjYWxlbWVkaWEtdHJhbnNmb3JtZWQgKDEpLmpwZWciLCJpYXQiOjE3NzA4ODAxNTYsImV4cCI6MTgwMjQxNjE1Nn0.L8xYz_kX0vvFoZwGvsC_0oqLKuguNpUBmSwOxOAksik"
+        />
+        <source
+          media="(max-width: 767px)"
+          srcSet="https://blwoiwbplzhoyviciovw.supabase.co/storage/v1/object/sign/background--001/0u3X8DDpJ9p1zIcckeqQ--0--65bi5.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wZGQ5MjJkNC0wYzRlLTRiMTAtYTUyYy1kMzRhNTBiNWU2ZTMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS0wMDEvMHUzWDhERHBKOXAxekljY2tlcVEtLTAtLTY1Ymk1LmpwZyIsImlhdCI6MTc3MDg3OTQ2MCwiZXhwIjoxODAyNDE1NDYwfQ.NU6Q8oBoSMuTMR0eqjH6m1VusmvMblwYq7Cck47xEF0"
+        />
+        <Image
+          alt="background image"
+          fill
+          className="object-cover -z-10"
+          src="https://blwoiwbplzhoyviciovw.supabase.co/storage/v1/object/sign/background--001--big/upscalemedia-transformed%20(1).jpeg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wZGQ5MjJkNC0wYzRlLTRiMTAtYTUyYy1kMzRhNTBiNWU2ZTMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiYWNrZ3JvdW5kLS0wMDEtLWJpZy91cHNjYWxlbWVkaWEtdHJhbnNmb3JtZWQgKDEpLmpwZWciLCJpYXQiOjE3NzA4ODAxNTYsImV4cCI6MTgwMjQxNjE1Nn0.L8xYz_kX0vvFoZwGvsC_0oqLKuguNpUBmSwOxOAksik"
+          priority
+        />
+      </picture>
       <div className="h-[100%] w-[25%] flex justify-center items-start">
         <Image
           width={120}
