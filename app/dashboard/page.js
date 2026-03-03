@@ -21,6 +21,7 @@ import {
 import { markNoShow } from "../ApiServices/serverActions";
 import { createSupabaseServerClient } from "../supabase/server";
 import Image from "next/image";
+import GreetingComponent from "./greetingComponent";
 
 export default async function Page() {
   unstable_noStore();
@@ -52,9 +53,7 @@ export default async function Page() {
 
   return (
     <div className="min-h-[100vh] h-auto bg-amber-400 overflow-y-auto overflow-x-hidden">
-      {/* Header - Fixed */}
       <div className="relative w-full h-[5rem] xl:h-[7rem] flex justify-center items-center overflow-hidden">
-        {/* Image with fill - now constrained to parent */}
         <Image
           alt="galaxy"
           fill
@@ -63,12 +62,9 @@ export default async function Page() {
           priority
         />
 
-        {/* Optional overlay for better text contrast */}
         <div className="absolute inset-0 bg-black/20 z-[1]" />
 
-        <h2 className="relative z-10 text-blue-300 xs:text-xl text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl px-4 text-center">
-          Good {timeGreeting}
-        </h2>
+        <GreetingComponent />
       </div>
 
       {shouldUseSlider ? (
