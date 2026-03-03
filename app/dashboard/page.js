@@ -52,7 +52,7 @@ export default async function Page() {
   const shouldUseSlider = appointments && appointments.length > 3;
 
   return (
-    <div className="min-h-[100vh] h-auto bg-amber-400 overflow-y-auto overflow-x-hidden">
+    <div className="min-h-[100vh] h-auto bg-amber-950 overflow-y-auto overflow-x-hidden">
       <div className="relative w-full h-[5rem] xl:h-[7rem] flex justify-center items-center overflow-hidden">
         <Image
           alt="galaxy"
