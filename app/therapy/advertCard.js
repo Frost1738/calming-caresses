@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useContext } from "react";
 import { ChevronLeft, ChevronRight, Share2, ExternalLink } from "lucide-react";
 
 import ExperienceForm from "./experiences/experienceForm";
+import Image from "next/image";
 
 const sampleImages = [
   "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop",
@@ -88,10 +89,14 @@ export default function AdvertCard({
           <div className="relative h-48 sm:h-56 md:h-64 lg:h-72 xl:h-80">
             {/* Current Image */}
             <div className="relative w-full h-full overflow-hidden">
-              <img
+              <Image
                 src={images[currentIndex]}
                 alt={`Slide ${currentIndex + 1}`}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                priority={currentIndex === 0}
+                quality={85}
               />
               {/* Image Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
