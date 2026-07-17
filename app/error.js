@@ -54,7 +54,7 @@ export default function Error({ error, reset }) {
                   </p>
                   {error.digest && (
                     <p className="text-slate-500 text-xs mt-2">
-                      Reference: {error.digest}
+                      Reference: {error}
                     </p>
                   )}
                 </div>
